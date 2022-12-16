@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
           title: const CustomSearchBar(),
           bottom: const TabBar(
               isScrollable: true,
-              indicatorColor: Colors.blue,
+              indicatorColor: Colors.lightBlueAccent,
               indicatorWeight: 1,
               labelStyle: TextStyle(
                 fontSize: 16,

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:multi_store_app/screens/cart_screen.dart';
 import 'package:multi_store_app/screens/home_screen.dart';
+import 'package:multi_store_app/screens/profile_screen.dart';
+import 'package:multi_store_app/screens/stores.dart';
 
 import 'category_screen.dart';
 
@@ -15,9 +18,9 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   final List<Widget> _tabs = const [
     HomeScreen(),
     CategoryScreen(),
-    Center(child: Text("Stores Screen")),
-    Center(child: Text("Cart Screen")),
-    Center(child: Text("Profile Screen")),
+    StoresScreen(),
+    CartScreen(),
+    ProfileScreen(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
       body: _tabs[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Colors.lightBlueAccent,
         unselectedItemColor: Colors.grey,
         elevation: 0,
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),

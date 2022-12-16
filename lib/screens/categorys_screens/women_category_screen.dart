@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:multi_store_app/utilities/category_list.dart';
 
 import '../../widgets/category_model.dart';
-import '../minor_screen/sub_category_products.dart';
 
 class WomenCategoryScreen extends StatelessWidget {
   const WomenCategoryScreen({super.key});

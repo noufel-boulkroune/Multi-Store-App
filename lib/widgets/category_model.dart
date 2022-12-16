@@ -15,7 +15,7 @@ class SliderBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 30),
+      padding: const EdgeInsets.symmetric(vertical: 30),
       height: size.height * .8,
       width: size.width * .05,
       child: Container(
@@ -38,11 +38,11 @@ class SliderBar extends StatelessWidget {
                           fontSize: 20,
                           fontWeight: FontWeight.w600),
                     )
-                  : Text(
+                  : const Text(
                       "<<",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: Colors.blue,
+                          color: Colors.lightBlueAccent,
                           letterSpacing: 10,
                           fontSize: 20,
                           fontWeight: FontWeight.w600),
@@ -50,8 +50,8 @@ class SliderBar extends StatelessWidget {
               Text(
                 mainCategoryName.toUpperCase(),
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.blue,
+                style: const TextStyle(
+                    color: Colors.lightBlueAccent,
                     letterSpacing: 10,
                     fontSize: 20,
                     fontWeight: FontWeight.w600),
@@ -66,11 +66,11 @@ class SliderBar extends StatelessWidget {
                           fontSize: 20,
                           fontWeight: FontWeight.w600),
                     )
-                  : Text(
+                  : const Text(
                       ">>",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: Colors.blue,
+                          color: Colors.lightBlueAccent,
                           letterSpacing: 10,
                           fontSize: 20,
                           fontWeight: FontWeight.w600),
@@ -109,24 +109,21 @@ class SubCategoryModel extends StatelessWidget {
               ),
             ));
       },
-      child: Container(
-        // height: 100,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 70,
-              width: 70,
-              child: Image.asset(
-                imageName,
-                fit: BoxFit.cover,
-              ),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 70,
+            width: 70,
+            child: Image.asset(
+              imageName,
+              fit: BoxFit.cover,
             ),
-            Text(
-              subCategoryLable,
-              style: TextStyle(fontSize: 12),
-            ),
-          ],
-        ),
+          ),
+          Text(
+            subCategoryLable,
+            style: const TextStyle(fontSize: 12),
+          ),
+        ],
       ),
     );
   }

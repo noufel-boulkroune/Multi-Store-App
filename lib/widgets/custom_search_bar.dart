@@ -34,7 +34,7 @@ class CustomSearchBar extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Icon(
                   Icons.search,
-                  color: Colors.blue,
+                  color: Colors.lightBlueAccent,
                 ),
               ),
               const Expanded(
@@ -47,7 +47,7 @@ class CustomSearchBar extends StatelessWidget {
                 height: 32,
                 width: 75,
                 decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: Colors.lightBlueAccent,
                     borderRadius: BorderRadius.circular(15)),
                 child: const Center(
                     child: Text(

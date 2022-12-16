@@ -72,7 +72,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
     return Container(
       height: size.height * .80,
       width: size.width * 0.8,
-      decoration: BoxDecoration(color: Colors.white),
+      decoration: const BoxDecoration(color: Colors.white),
       child: PageView(
         controller: _pageController,
         onPageChanged: (index) {
@@ -86,7 +86,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           });
         },
         scrollDirection: Axis.vertical,
-        children: [
+        children: const [
           MenCategoryScreen(),
           WomenCategoryScreen(),
           ElectronicsCategoryScreen(),
