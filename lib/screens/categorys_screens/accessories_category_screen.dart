@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:multi_store_app/utilities/category_list.dart';
 
 import '../../widgets/category_model.dart';
-import '../minor_screen/sub_category_products.dart';
 
-class MenCategoryScreen extends StatelessWidget {
-  const MenCategoryScreen({super.key});
+class AccessoriesCategoryScreen extends StatelessWidget {
+  const AccessoriesCategoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,19 +21,20 @@ class MenCategoryScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CategoryHeaderLable(headerLable: 'Men'),
+                const CategoryHeaderLable(headerLable: 'Accessories'),
                 SizedBox(
                   height: size.height * 0.71,
                   child: GridView.count(
                     mainAxisSpacing: 35,
                     crossAxisSpacing: 15,
                     crossAxisCount: 3,
-                    children: List.generate(men.length, (index) {
+                    children: List.generate(accessories.length, (index) {
                       return SubCategoryModel(
-                        imageName: 'assets/images/men/men$index.jpg',
-                        mainCategoryName: 'men',
-                        subCategoryName: men[index],
-                        subCategoryLable: men[index],
+                        imageName:
+                            'assets/images/accessories/accessories$index.jpg',
+                        mainCategoryName: 'accessories',
+                        subCategoryName: accessories[index],
+                        subCategoryLable: accessories[index],
                       );
                     }),
                   ),
@@ -48,7 +48,7 @@ class MenCategoryScreen extends StatelessWidget {
           right: 0,
           child: SliderBar(
             size: size,
-            mainCategoryName: 'men',
+            mainCategoryName: 'accessories',
           ),
         )
       ]),
