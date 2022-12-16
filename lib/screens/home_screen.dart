@@ -28,9 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontWeight: FontWeight.bold,
               ),
               tabs: [
-                RepeatedTab(
-                  label: 'Men',
-                ),
+                RepeatedTab(label: 'Men'),
                 RepeatedTab(label: 'Women'),
                 RepeatedTab(label: 'Shoes'),
                 RepeatedTab(label: 'Bags'),

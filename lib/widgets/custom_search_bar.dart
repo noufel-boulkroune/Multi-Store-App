@@ -34,20 +34,20 @@ class CustomSearchBar extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Icon(
                   Icons.search,
-                  color: Colors.black,
+                  color: Colors.blue,
                 ),
               ),
               const Expanded(
                 child: Text(
                   "What are you looking for?",
-                  style: TextStyle(color: Colors.black, fontSize: 16),
+                  style: TextStyle(color: Colors.grey, fontSize: 16),
                 ),
               ),
               Container(
                 height: 32,
                 width: 75,
                 decoration: BoxDecoration(
-                    color: Colors.grey,
+                    color: Colors.blue,
                     borderRadius: BorderRadius.circular(15)),
                 child: const Center(
                     child: Text(

@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:multi_store_app/screens/categorys_screens/women_category_screen.dart';
 import 'package:multi_store_app/widgets/custom_search_bar.dart';
 
+import 'categorys_screens/accessories_category_screen.dart';
+import 'categorys_screens/bags_category_screen.dart';
+import 'categorys_screens/beauty_category_screen.dart';
+import 'categorys_screens/electronics_category_screen.dart';
+import 'categorys_screens/home_and_garden_category_screen.dart';
+import 'categorys_screens/kids_category_screen.dart';
 import 'categorys_screens/men_category_screen.dart';
+import 'categorys_screens/shoes_category_screen.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
@@ -62,10 +70,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   Widget categoryView(Size size) {
     return Container(
-      height: size.height * .8,
+      height: size.height * .80,
       width: size.width * 0.8,
-      decoration: BoxDecoration(color: Colors.grey.shade100),
-      child: PageView.builder(
+      decoration: BoxDecoration(color: Colors.white),
+      child: PageView(
         controller: _pageController,
         onPageChanged: (index) {
           setState(() {
@@ -78,10 +86,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
           });
         },
         scrollDirection: Axis.vertical,
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          return const MenCategoryScreen();
-        },
+        children: [
+          MenCategoryScreen(),
+          WomenCategoryScreen(),
+          ElectronicsCategoryScreen(),
+          AccessoriesCategoryScreen(),
+          ShoesCategoryScreen(),
+          HomeAndGardenCategoryScreen(),
+          BeautyCategoryScreen(),
+          KidsCategoryScreen(),
+          BagsCategoryScreen(),
+        ],
       ),
     );
   }
@@ -97,8 +112,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
           onTap: () {
             _pageController.animateToPage(
               index,
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.bounceOut,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.fastOutSlowIn,
             );
           },
           child: Container(
@@ -110,7 +125,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 child: Text(
               items[index].lable,
               textAlign: TextAlign.center,
-              style: const TextStyle(),
+              style: const TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.bold),
             )),
           ),
         ),
