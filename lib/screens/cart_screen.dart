@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:multi_store_app/screens/customer_home_screen.dart';
 import 'package:multi_store_app/widgets/appbar_widget.dart';
 
+import '../widgets/blue_button.dart';
+
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
@@ -75,16 +77,11 @@ class _CartScreenState extends State<CartScreen> {
                     color: Colors.lightBlueAccent),
               ),
             ),
-            Container(
-              height: 40,
-              width: MediaQuery.of(context).size.width * .4,
-              decoration: BoxDecoration(
-                  color: const Color(0xFFF2B705),
-                  borderRadius: BorderRadius.circular(25)),
-              child: MaterialButton(
-                onPressed: () {},
-                child: const Text("CHECK OUT"),
-              ),
+            BlueButton(
+              lable: 'CHECK OUT',
+              onPressed: () {},
+              width: .4,
+              color: Color(0xFFF2B705),
             )
           ],
         ),
