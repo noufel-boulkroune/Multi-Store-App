@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:multi_store_app/screens/cart_screen.dart';
+import 'package:multi_store_app/screens/customer_screens/customer_orders.dart';
+import 'package:multi_store_app/screens/customer_screens/wishlist_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -84,7 +87,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               bottomLeft: Radius.circular(50),
                               topLeft: Radius.circular(50))),
                       child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CartScreen(),
+                                ));
+                          },
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width * .21,
                             child: const Center(
@@ -104,7 +113,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         border: Border.all(color: Colors.white, width: 3),
                       ),
                       child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CustomerOrdersScreen(),
+                                ));
+                          },
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width * .21,
                             child: const Center(
@@ -126,7 +141,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               bottomRight: Radius.circular(50),
                               topRight: Radius.circular(50))),
                       child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => WishlistScreen(),
+                                ));
+                          },
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width * .21,
                             child: const Center(
@@ -209,7 +230,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           RepeatedListTaile(
                             title: 'LogOut',
                             icon: Icons.logout,
-                            onListTap: () {},
+                            onListTap: () {
+                              Navigator.pushReplacementNamed(context, "/");
+                            },
                           ),
                         ]),
                       ),

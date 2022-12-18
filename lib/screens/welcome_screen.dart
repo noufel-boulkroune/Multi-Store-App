@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:multi_store_app/screens/customer_home_screen.dart';
+import 'package:multi_store_app/screens/supplier_home_screen.dart';
 
 import '/widgets/blue_button.dart';
 
@@ -143,7 +145,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                     _logoAnimationController),
                             BlueButton(
                               lable: "Log In",
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pushReplacementNamed(
+                                    context, SupplierHomeScreen.routeName);
+                              },
                               width: .25,
                               color: Colors.lightBlueAccent,
                             ),
@@ -184,7 +189,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       children: [
                         BlueButton(
                           lable: "Log In",
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(
+                                context, CustomerHomeScreen.routeName);
+                          },
                           width: .25,
                           color: Colors.lightBlueAccent,
                         ),

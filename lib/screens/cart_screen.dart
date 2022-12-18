@@ -14,76 +14,79 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        title: const AppBarTitle(title: "Cart"),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.delete_forever,
-                color: Colors.black,
-              ))
-        ],
-      ),
-      body: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          const Text(
-            "Your Cart Is Empty!",
-            style: TextStyle(fontSize: 30),
+    return Material(
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: Colors.white,
+            title: const AppBarTitle(title: "Cart"),
+            leading: AppBarBackButton(),
+            actions: [
+              IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.delete_forever,
+                    color: Colors.black,
+                  ))
+            ],
           ),
-          const SizedBox(
-            height: 50,
-          ),
-          Material(
-            color: Colors.lightBlueAccent,
-            borderRadius: BorderRadius.circular(25),
-            child: MaterialButton(
-              minWidth: MediaQuery.of(context).size.width * .6,
-              onPressed: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CustomerHomeScreen(),
-                    ));
-              },
-              child: const Text(
-                "continue shopping",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
+          body: Center(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              const Text(
+                "Your Cart Is Empty!",
+                style: TextStyle(fontSize: 30),
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+              Material(
+                color: Colors.lightBlueAccent,
+                borderRadius: BorderRadius.circular(25),
+                child: MaterialButton(
+                  minWidth: MediaQuery.of(context).size.width * .6,
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(
+                        context, CustomerHomeScreen.routeName);
+                  },
+                  child: const Text(
+                    "continue shopping",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
-              ),
+              )
+            ]),
+          ),
+          bottomSheet: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Row(
+              children: [
+                const Text(
+                  "Total : \$ ",
+                  style: TextStyle(fontSize: 18),
+                ),
+                const Expanded(
+                  child: Text(
+                    "00.00",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.lightBlueAccent),
+                  ),
+                ),
+                BlueButton(
+                  lable: 'CHECK OUT',
+                  onPressed: () {},
+                  width: .4,
+                  color: Color(0xFFF2B705),
+                )
+              ],
             ),
-          )
-        ]),
-      ),
-      bottomSheet: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Row(
-          children: [
-            const Text(
-              "Total : \$ ",
-              style: TextStyle(fontSize: 18),
-            ),
-            const Expanded(
-              child: Text(
-                "00.00",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.lightBlueAccent),
-              ),
-            ),
-            BlueButton(
-              lable: 'CHECK OUT',
-              onPressed: () {},
-              width: .4,
-              color: Color(0xFFF2B705),
-            )
-          ],
+          ),
         ),
       ),
     );

@@ -15,11 +15,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const WelcomeScreen(),
+      initialRoute: "/",
+      routes: {
+        "/": (context) => WelcomeScreen(),
+        CustomerHomeScreen.routeName: (context) => CustomerHomeScreen(),
+        SupplierHomeScreen.routeName: (context) => SupplierHomeScreen()
+      },
     );
   }
 }

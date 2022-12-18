@@ -7,6 +7,7 @@ import 'package:multi_store_app/screens/stores.dart';
 import 'category_screen.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
+  static const routeName = "customer_screen";
   const CustomerHomeScreen({super.key});
 
   @override

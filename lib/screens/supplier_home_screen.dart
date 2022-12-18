@@ -6,6 +6,7 @@ import 'package:multi_store_app/screens/stores.dart';
 import 'category_screen.dart';
 
 class SupplierHomeScreen extends StatefulWidget {
+  static const routeName = "Supplier_screen";
   const SupplierHomeScreen({super.key});
 
   @override
