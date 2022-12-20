@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multi_store_app/auth/customer_signup_screen.dart';
 import 'package:multi_store_app/screens/customer_home_screen.dart';
 import 'package:multi_store_app/screens/supplier_home_screen.dart';
 import 'package:multi_store_app/screens/welcome_screen.dart';
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (context) => WelcomeScreen(),
         CustomerHomeScreen.routeName: (context) => CustomerHomeScreen(),
-        SupplierHomeScreen.routeName: (context) => SupplierHomeScreen()
+        SupplierHomeScreen.routeName: (context) => SupplierHomeScreen(),
+        CustomerSignupScreen.routeName: (context) => CustomerSignupScreen()
       },
     );
   }

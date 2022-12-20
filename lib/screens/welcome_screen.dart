@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:multi_store_app/auth/customer_signup_screen.dart';
 import 'package:multi_store_app/screens/customer_home_screen.dart';
 import 'package:multi_store_app/screens/supplier_home_screen.dart';
 
@@ -200,7 +201,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           padding: const EdgeInsets.only(right: 20),
                           child: BlueButton(
                             lable: "Sign Up",
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(
+                                  context, CustomerSignupScreen.routeName);
+                            },
                             width: .25,
                             color: Colors.lightBlueAccent,
                           ),
