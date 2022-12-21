@@ -27,7 +27,7 @@ class BlueButton extends StatelessWidget {
         },
         child: Text(
           lable,
-          style: TextStyle(fontSize: 18),
+          style: const TextStyle(fontSize: 18),
         ),
       ),
     );

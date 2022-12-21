@@ -9,8 +9,8 @@ class MyStoreScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: AppBarTitle(title: "My Store"),
-        leading: AppBarBackButton(),
+        title: const AppBarTitle(title: "My Store"),
+        leading: const AppBarBackButton(),
       ),
     );
   }

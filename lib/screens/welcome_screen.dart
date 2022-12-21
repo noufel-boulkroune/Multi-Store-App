@@ -83,7 +83,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               SizedBox(
                 height: 80,
                 child: DefaultTextStyle(
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Colors.white,
                       fontSize: 35,
                       fontWeight: FontWeight.bold,

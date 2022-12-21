@@ -9,8 +9,8 @@ class BalanceScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: AppBarTitle(title: "Balnce Screen"),
-        leading: AppBarBackButton(),
+        title: const AppBarTitle(title: "Balnce Screen"),
+        leading: const AppBarBackButton(),
       ),
     );
   }
