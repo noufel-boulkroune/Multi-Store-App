@@ -21,10 +21,11 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: "/",
       routes: {
-        "/": (context) => WelcomeScreen(),
-        CustomerHomeScreen.routeName: (context) => CustomerHomeScreen(),
-        SupplierHomeScreen.routeName: (context) => SupplierHomeScreen(),
-        CustomerSignupScreen.routeName: (context) => CustomerSignupScreen()
+        "/": (context) => const WelcomeScreen(),
+        CustomerHomeScreen.routeName: (context) => const CustomerHomeScreen(),
+        SupplierHomeScreen.routeName: (context) => const SupplierHomeScreen(),
+        CustomerSignupScreen.routeName: (context) =>
+            const CustomerSignupScreen()
       },
     );
   }

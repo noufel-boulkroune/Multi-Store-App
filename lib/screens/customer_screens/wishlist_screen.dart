@@ -9,8 +9,8 @@ class WishlistScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: AppBarTitle(title: "Wishlist Screen"),
-        leading: AppBarBackButton(),
+        title: const AppBarTitle(title: "Wishlist Screen"),
+        leading: const AppBarBackButton(),
       ),
     );
   }

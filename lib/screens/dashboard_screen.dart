@@ -26,12 +26,12 @@ List<IconData> iconsList = [
 ];
 
 List<Widget> pages = [
-  MyStoreScreen(),
-  SupplierOrdersScreen(),
-  EditBusinessScreen(),
-  ManageProductsScreen(),
-  BalanceScreen(),
-  StaticsScreen()
+  const MyStoreScreen(),
+  const SupplierOrdersScreen(),
+  const EditBusinessScreen(),
+  const ManageProductsScreen(),
+  const BalanceScreen(),
+  const StaticsScreen()
 ];
 
 class DashboardScreen extends StatelessWidget {

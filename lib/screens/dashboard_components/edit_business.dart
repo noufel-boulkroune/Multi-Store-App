@@ -9,8 +9,8 @@ class EditBusinessScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: AppBarTitle(title: "Edit Business"),
-        leading: AppBarBackButton(),
+        title: const AppBarTitle(title: "Edit Business"),
+        leading: const AppBarBackButton(),
       ),
     );
   }

@@ -9,8 +9,8 @@ class CustomerOrdersScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: AppBarTitle(title: "Customer Orders"),
-        leading: AppBarBackButton(),
+        title: const AppBarTitle(title: "Customer Orders"),
+        leading: const AppBarBackButton(),
       ),
     );
   }

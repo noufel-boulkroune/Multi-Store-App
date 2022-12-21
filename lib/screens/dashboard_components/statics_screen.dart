@@ -9,8 +9,8 @@ class StaticsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: AppBarTitle(title: "Statics Screen"),
-        leading: AppBarBackButton(),
+        title: const AppBarTitle(title: "Statics Screen"),
+        leading: const AppBarBackButton(),
       ),
     );
   }

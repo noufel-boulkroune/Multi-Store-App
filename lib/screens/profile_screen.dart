@@ -92,8 +92,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      CartScreen(back: AppBarBackButton()),
+                                  builder: (context) => const CartScreen(
+                                      back: AppBarBackButton()),
                                 ));
                           },
                           child: SizedBox(
@@ -119,7 +119,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CustomerOrdersScreen(),
+                                  builder: (context) =>
+                                      const CustomerOrdersScreen(),
                                 ));
                           },
                           child: SizedBox(
@@ -147,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => WishlistScreen(),
+                                  builder: (context) => const WishlistScreen(),
                                 ));
                           },
                           child: SizedBox(
