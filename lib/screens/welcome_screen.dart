@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -19,6 +20,7 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _logoAnimationController;
+  bool _processing = false;
   @override
   void initState() {
     _logoAnimationController =
@@ -235,15 +237,25 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       lable: 'Facebook',
                       onPressed: () {},
                     ),
-                    GoogleFacebookLogIn(
-                      image: const Icon(
-                        Icons.person,
-                        size: 50,
-                        color: Colors.lightBlueAccent,
-                      ),
-                      lable: 'Guest',
-                      onPressed: () {},
-                    ),
+                    _processing
+                        ? CircularProgressIndicator()
+                        : GoogleFacebookLogIn(
+                            image: const Icon(
+                              Icons.person,
+                              size: 50,
+                              color: Colors.lightBlueAccent,
+                            ),
+                            lable: 'Guest',
+                            onPressed: () async {
+                              setState(() {
+                                _processing = true;
+                              });
+                              await FirebaseAuth.instance.signInAnonymously();
+
+                              Navigator.pushReplacementNamed(
+                                  context, CustomerHomeScreen.routeName);
+                            },
+                          ),
                   ],
                 ),
               )
@@ -296,7 +308,7 @@ class GoogleFacebookLogIn extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: InkWell(
         onTap: () {
-          onPressed;
+          onPressed();
         },
         child: Column(
           children: [

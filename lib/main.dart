@@ -3,8 +3,11 @@ import 'package:multi_store_app/auth/customer_signup_screen.dart';
 import 'package:multi_store_app/screens/customer_home_screen.dart';
 import 'package:multi_store_app/screens/supplier_home_screen.dart';
 import 'package:multi_store_app/screens/welcome_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
