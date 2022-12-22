@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+
+import 'package:image_picker/image_picker.dart';
 
 import '../widgets/auth_widgets.dart';
 import '../widgets/snackbar.dart';
@@ -17,6 +21,8 @@ final TextEditingController _passwordControler = TextEditingController();
 
 class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
   late String name, email, password;
+  XFile? _imageFile;
+  dynamic _pickedImageError;
 
   bool passwordVisibility = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -28,6 +34,44 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
     _emailControler.dispose();
     _passwordControler.dispose();
     super.dispose();
+  }
+
+  void _pickImageFromCamera() async {
+    try {
+      final pickedImage = await ImagePicker().pickImage(
+        source: ImageSource.camera,
+        maxHeight: 300,
+        maxWidth: 300,
+        imageQuality: 95,
+      );
+      setState(() {
+        _imageFile = pickedImage;
+      });
+    } catch (error) {
+      setState(() {
+        _pickedImageError = error;
+      });
+      print(_pickedImageError);
+    }
+  }
+
+  void _pickImageFromGallery() async {
+    try {
+      final pickedImage = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        maxHeight: 300,
+        maxWidth: 300,
+        imageQuality: 95,
+      );
+      setState(() {
+        _imageFile = pickedImage;
+      });
+    } catch (error) {
+      setState(() {
+        _pickedImageError = error;
+      });
+      print(_pickedImageError);
+    }
   }
 
   @override
@@ -51,16 +95,21 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
                     const AuthHeaderLable(
                       headerLable: 'Sign Up',
                     ),
-                    const Padding(
-                      padding: EdgeInsets.all(10),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
                       child: CircleAvatar(
                         radius: 60,
                         backgroundColor: Colors.lightBlueAccent,
-                        child: Icon(
-                          Icons.person,
-                          size: 70,
-                          color: Colors.white,
-                        ),
+                        backgroundImage: _imageFile == null
+                            ? null
+                            : FileImage(File(_imageFile!.path)),
+                        child: _imageFile == null
+                            ? Icon(
+                                Icons.person,
+                                size: 70,
+                                color: Colors.white,
+                              )
+                            : null,
                       ),
                     ),
                     Row(
@@ -73,7 +122,7 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
                                 borderRadius: BorderRadius.circular(25)),
                             child: IconButton(
                                 onPressed: () {
-                                  print("Pick image from camera");
+                                  _pickImageFromCamera();
                                 },
                                 icon: const Icon(
                                   Icons.camera_alt,
@@ -92,7 +141,7 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
                                 borderRadius: BorderRadius.circular(25)),
                             child: IconButton(
                                 onPressed: () {
-                                  print("Pick image from Gallery");
+                                  _pickImageFromGallery();
                                 },
                                 icon: const Icon(
                                   Icons.photo,
@@ -157,12 +206,21 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
                       mainButtonLable: "Sign Up",
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          print("valid");
-                          setState(() {
-                            name = _nameControler.text;
-                            email = _emailControler.text;
-                            password = _passwordControler.text;
-                          });
+                          if (_imageFile != null) {
+                            print("valid");
+                            setState(() {
+                              name = _nameControler.text;
+                              email = _emailControler.text;
+                              password = _passwordControler.text;
+                              _formKey.currentState!.reset();
+                              setState(() {
+                                _imageFile = null;
+                              });
+                            });
+                          } else {
+                            SnackBarHundler.showSnackBar(
+                                _scafoldKey, "Pleas pick image first");
+                          }
                         } else {
                           SnackBarHundler.showSnackBar(
                               _scafoldKey, "Pleas fill all fields");
