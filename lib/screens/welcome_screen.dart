@@ -38,6 +38,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -204,7 +205,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           child: BlueButton(
                             lable: "Sign Up",
                             onPressed: () {
-                              Navigator.pushReplacementNamed(
+                              Navigator.pushNamed(
                                   context, CustomerSignupScreen.routeName);
                             },
                             width: .25,

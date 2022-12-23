@@ -1,9 +1,13 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storege;
 
+import '../screens/customer_home_screen.dart';
 import '../widgets/auth_widgets.dart';
 import '../widgets/snackbar.dart';
 
@@ -20,9 +24,13 @@ final TextEditingController _emailControler = TextEditingController();
 final TextEditingController _passwordControler = TextEditingController();
 
 class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
-  late String name, email, password;
+  late String name, email, password, profileImage, _userid;
+  bool processing = false;
   XFile? _imageFile;
   dynamic _pickedImageError;
+
+  CollectionReference customers =
+      FirebaseFirestore.instance.collection("customers");
 
   bool passwordVisibility = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -71,6 +79,85 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
         _pickedImageError = error;
       });
       print(_pickedImageError);
+    }
+  }
+
+  void signUp() async {
+    setState(() {
+      processing = true;
+    });
+    if (_formKey.currentState!.validate()) {
+      if (_imageFile != null) {
+        setState(() {
+          name = _nameControler.text;
+          email = _emailControler.text;
+          password = _passwordControler.text;
+        });
+        try {
+          await FirebaseAuth.instance
+              .createUserWithEmailAndPassword(
+            email: email,
+            password: password,
+          )
+              .then((value) async {
+            //Store image in firebase
+            firebase_storege.Reference reference =
+                firebase_storege.FirebaseStorage.instance.ref(
+              "customer-image/$email.jpg",
+            );
+
+            await reference.putFile(File(_imageFile!.path));
+
+            profileImage = await reference.getDownloadURL();
+            _userid = FirebaseAuth.instance.currentUser!.uid;
+            await customers.doc(_userid).set({
+              "name": name,
+              "email": email,
+              "profileImage": profileImage,
+              "phone": "",
+              "address": "",
+              "customerId": _userid
+            }).then((value) {
+              setState(() {
+                _imageFile = null;
+                _formKey.currentState!.reset();
+                processing = false;
+              });
+            });
+
+            Navigator.pushReplacementNamed(
+                context, CustomerHomeScreen.routeName);
+          });
+        } on FirebaseAuthException catch (error) {
+          if (error.code == 'weak-password') {
+            SnackBarHundler.showSnackBar(
+              _scafoldKey,
+              "The password provided is too weak.",
+            );
+            setState(() {
+              processing = false;
+            });
+          } else if (error.code == 'email-already-in-use') {
+            SnackBarHundler.showSnackBar(
+              _scafoldKey,
+              "The account already exists for that email.",
+            );
+            setState(() {
+              processing = false;
+            });
+          }
+        }
+      } else {
+        SnackBarHundler.showSnackBar(_scafoldKey, "Pleas pick image first");
+        setState(() {
+          processing = false;
+        });
+      }
+    } else {
+      SnackBarHundler.showSnackBar(_scafoldKey, "Pleas fill all fields");
+      setState(() {
+        processing = false;
+      });
     }
   }
 
@@ -176,7 +263,7 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
                             hintText: "Enter your email")),
                     TextFormField(
                         controller: _passwordControler,
-                        obscureText: passwordVisibility,
+                        obscureText: !passwordVisibility,
                         validator: (value) =>
                             value!.isEmpty ? "Pleas enter your Password" : null,
                         decoration: textFormDecoration.copyWith(
@@ -188,7 +275,7 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
                                     passwordVisibility = !passwordVisibility;
                                   });
                                 },
-                                icon: passwordVisibility
+                                icon: !passwordVisibility
                                     ? const Icon(
                                         Icons.visibility,
                                         color: Colors.lightBlueAccent,
@@ -202,31 +289,14 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
                       haveAccont: "Already have account? ",
                       onPressed: () {},
                     ),
-                    AuthMainButton(
-                      mainButtonLable: "Sign Up",
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          if (_imageFile != null) {
-                            print("valid");
-                            setState(() {
-                              name = _nameControler.text;
-                              email = _emailControler.text;
-                              password = _passwordControler.text;
-                              _formKey.currentState!.reset();
-                              setState(() {
-                                _imageFile = null;
-                              });
-                            });
-                          } else {
-                            SnackBarHundler.showSnackBar(
-                                _scafoldKey, "Pleas pick image first");
-                          }
-                        } else {
-                          SnackBarHundler.showSnackBar(
-                              _scafoldKey, "Pleas fill all fields");
-                        }
-                      },
-                    ),
+                    processing
+                        ? const CircularProgressIndicator()
+                        : AuthMainButton(
+                            mainButtonLable: "Sign Up",
+                            onPressed: () {
+                              signUp();
+                            },
+                          ),
                     const SizedBox(
                       height: 30,
                     )
