@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:multi_store_app/auth/customer_signup_screen.dart';
-
-import '../screens/customer_home_screen.dart';
+import '../auth/customer_signup_screen.dart';
+import '../screens/supplier_home_screen.dart';
 import '../widgets/auth_widgets.dart';
 import '../widgets/snackbar.dart';
+import 'supplier_signup_screen.dart';
 
-class CustomerLoginScreen extends StatefulWidget {
-  static const routeName = "customer_login";
-  const CustomerLoginScreen({super.key});
+class SupplierLoginScreen extends StatefulWidget {
+  static const routeName = "supplier_login";
+  const SupplierLoginScreen({super.key});
 
   @override
-  State<CustomerLoginScreen> createState() => _CustomerLoginScreenState();
+  State<SupplierLoginScreen> createState() => _SupplierLoginScreenState();
 }
 
 final TextEditingController _emailControler = TextEditingController();
 final TextEditingController _passwordControler = TextEditingController();
 
-class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
+class _SupplierLoginScreenState extends State<SupplierLoginScreen> {
   late String email, password, profileImage;
   bool processing = false;
 
@@ -56,7 +55,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
           });
         });
 
-        Navigator.pushReplacementNamed(context, CustomerHomeScreen.routeName);
+        Navigator.pushReplacementNamed(context, SupplierHomeScreen.routeName);
       } on FirebaseAuthException catch (error) {
         if (error.code == 'user-not-found') {
           SnackBarHundler.showSnackBar(
@@ -178,7 +177,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                           haveAccont: "Don't have an account? ",
                           onPressed: () {
                             Navigator.pushNamed(
-                                context, CustomerSignupScreen.routeName);
+                                context, SupplierSignupScreen.routeName);
                           },
                         ),
                         const SizedBox(

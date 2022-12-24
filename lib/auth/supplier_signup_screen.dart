@@ -1,37 +1,36 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storege;
-import 'package:multi_store_app/auth/customer_login_screen.dart';
 
-import '../screens/customer_home_screen.dart';
+import '../auth/customer_login_screen.dart';
+import '../auth/supplier_login_screen.dart';
 import '../widgets/auth_widgets.dart';
 import '../widgets/snackbar.dart';
 
-class CustomerSignupScreen extends StatefulWidget {
-  static const routeName = "customer_signup";
-  const CustomerSignupScreen({super.key});
+class SupplierSignupScreen extends StatefulWidget {
+  static const routeName = "supplier_signup";
+  const SupplierSignupScreen({super.key});
 
   @override
-  State<CustomerSignupScreen> createState() => _CustomerSignupScreenState();
+  State<SupplierSignupScreen> createState() => _SupplierSignupScreenState();
 }
 
 final TextEditingController _nameControler = TextEditingController();
 final TextEditingController _emailControler = TextEditingController();
 final TextEditingController _passwordControler = TextEditingController();
 
-class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
-  late String name, email, password, profileImage, _userid;
+class _SupplierSignupScreenState extends State<SupplierSignupScreen> {
+  late String storeName, email, password, storeLogo, _supplierid;
   bool processing = false;
   XFile? _imageFile;
   dynamic _pickedImageError;
 
-  CollectionReference customers =
-      FirebaseFirestore.instance.collection("customers");
+  CollectionReference suppliers =
+      FirebaseFirestore.instance.collection("suppliers");
 
   bool passwordVisibility = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -90,7 +89,7 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
     if (_formKey.currentState!.validate()) {
       if (_imageFile != null) {
         setState(() {
-          name = _nameControler.text;
+          storeName = _nameControler.text;
           email = _emailControler.text;
           password = _passwordControler.text;
         });
@@ -104,20 +103,21 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
             //Store image in firebase
             firebase_storege.Reference reference =
                 firebase_storege.FirebaseStorage.instance.ref(
-              "customer-image/$email.jpg",
+              "supplier-image/$email.jpg",
             );
 
             await reference.putFile(File(_imageFile!.path));
 
-            profileImage = await reference.getDownloadURL();
-            _userid = FirebaseAuth.instance.currentUser!.uid;
-            await customers.doc(_userid).set({
-              "name": name,
+            storeLogo = await reference.getDownloadURL();
+            _supplierid = FirebaseAuth.instance.currentUser!.uid;
+            await suppliers.doc(_supplierid).set({
+              "storeName": storeName,
               "email": email,
-              "profileImage": profileImage,
+              "storeLogo": storeLogo,
               "phone": "",
-              "address": "",
-              "customerId": _userid
+              "storeAddress": "",
+              "supplierId": _supplierid,
+              "coverImage": ""
             }).then((value) {
               setState(() {
                 _imageFile = null;
@@ -126,7 +126,7 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
               });
             });
 
-            Navigator.pushNamed(context, CustomerLoginScreen.routeName);
+            Navigator.pushNamed(context, SupplierLoginScreen.routeName);
           });
         } on FirebaseAuthException catch (error) {
           if (error.code == 'weak-password') {
@@ -289,7 +289,7 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
                       haveAccont: "Already have account? ",
                       onPressed: () {
                         Navigator.pushNamed(
-                            context, CustomerLoginScreen.routeName);
+                            context, SupplierLoginScreen.routeName);
                       },
                     ),
                     processing

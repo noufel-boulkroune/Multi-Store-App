@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,8 @@ import 'package:multi_store_app/screens/customer_home_screen.dart';
 import 'package:multi_store_app/screens/supplier_home_screen.dart';
 
 import '../auth/customer_login_screen.dart';
+import '../auth/supplier_login_screen.dart';
+import '../auth/supplier_signup_screen.dart';
 import '/widgets/blue_button.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -22,6 +25,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _logoAnimationController;
   bool _processing = false;
+  late String _userid;
+  CollectionReference customers =
+      FirebaseFirestore.instance.collection("customers");
+
   @override
   void initState() {
     _logoAnimationController =
@@ -152,7 +159,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                               lable: "Log In",
                               onPressed: () {
                                 Navigator.pushReplacementNamed(
-                                    context, SupplierHomeScreen.routeName);
+                                    context, SupplierLoginScreen.routeName);
                               },
                               width: .25,
                               color: Colors.lightBlueAccent,
@@ -161,7 +168,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                               padding: const EdgeInsets.only(right: 20),
                               child: BlueButton(
                                 lable: "Sign Up",
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushReplacementNamed(
+                                      context, SupplierSignupScreen.routeName);
+                                },
                                 width: .25,
                                 color: Colors.lightBlueAccent,
                               ),
@@ -252,7 +262,20 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                               setState(() {
                                 _processing = true;
                               });
-                              await FirebaseAuth.instance.signInAnonymously();
+                              await FirebaseAuth.instance
+                                  .signInAnonymously()
+                                  .whenComplete(() async {
+                                _userid =
+                                    FirebaseAuth.instance.currentUser!.uid;
+                                await customers.doc(_userid).set({
+                                  "name": "",
+                                  "email": "",
+                                  "profileImage": "",
+                                  "phone": "",
+                                  "address": "",
+                                  "customerId": _userid
+                                });
+                              });
 
                               Navigator.pushReplacementNamed(
                                   context, CustomerHomeScreen.routeName);
