@@ -73,20 +73,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 30, top: 25),
                           child: Row(children: [
-                            CircleAvatar(
-                              radius: 50,
-                              backgroundImage:
-                                  NetworkImage(data["profileImage"]),
-                            ),
-                            // const CircleAvatar(
-                            //   radius: 50,
-                            //   backgroundImage:
-                            //       AssetImage("assets/images/inapp/guest.jpg"),
-                            // ),
+                            data["name"] == ""
+                                ? const CircleAvatar(
+                                    radius: 50,
+                                    backgroundImage: AssetImage(
+                                        "assets/images/inapp/guest.jpg"),
+                                  )
+                                : CircleAvatar(
+                                    radius: 50,
+                                    backgroundImage:
+                                        NetworkImage(data["profileImage"]),
+                                  ),
                             Padding(
                               padding: const EdgeInsets.only(left: 20),
                               child: Text(
-                                data["name"].toUpperCase(),
+                                data["name"] == ""
+                                    ? "geust".toUpperCase()
+                                    : data["name"].toUpperCase(),
                                 style: const TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
@@ -227,20 +230,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Column(children: [
                                 RepeatedListTaile(
                                   title: "Email Address",
-                                  subTitle: data["email"],
+                                  subTitle: data["email"] == ""
+                                      ? "example@gmail.com"
+                                      : data["email"],
                                   icon: Icons.email,
                                 ),
                                 const BlueDivider(),
                                 RepeatedListTaile(
                                   title: "Phone Number",
-                                  subTitle: data["phone"],
+                                  subTitle: data["phone"] == ""
+                                      ? "example: +11111"
+                                      : data["phone"],
                                   icon: Icons.phone,
                                 ),
                                 const BlueDivider(),
                                 RepeatedListTaile(
                                   title: "Address",
-                                  // subTitle: "Example: 140 - st - New Gersy",
-                                  subTitle: data["address"],
+                                  subTitle: data["address"] == ""
+                                      ? "Example: 140 - st - New Gersy"
+                                      : data["address"],
                                   icon: Icons.location_pin,
                                 ),
                               ]),
@@ -284,7 +292,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       tabYes: () async {
                                         await FirebaseAuth.instance.signOut();
                                         Navigator.of(context).pop();
-                                        Navigator.pushNamed(context, "/");
+                                        Navigator.pushReplacementNamed(
+                                            context, "/");
                                       },
                                     );
                                   },
