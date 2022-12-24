@@ -5,6 +5,8 @@ import 'package:multi_store_app/screens/supplier_home_screen.dart';
 import 'package:multi_store_app/screens/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'auth/customer_login_screen.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -28,7 +30,8 @@ class MyApp extends StatelessWidget {
         CustomerHomeScreen.routeName: (context) => const CustomerHomeScreen(),
         SupplierHomeScreen.routeName: (context) => const SupplierHomeScreen(),
         CustomerSignupScreen.routeName: (context) =>
-            const CustomerSignupScreen()
+            const CustomerSignupScreen(),
+        CustomerLoginScreen.routeName: (context) => const CustomerLoginScreen()
       },
     );
   }
