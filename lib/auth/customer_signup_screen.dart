@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storege;
+import 'package:multi_store_app/auth/customer_login_screen.dart';
 
 import '../screens/customer_home_screen.dart';
 import '../widgets/auth_widgets.dart';
@@ -125,8 +126,7 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
               });
             });
 
-            Navigator.pushReplacementNamed(
-                context, CustomerHomeScreen.routeName);
+            Navigator.pushNamed(context, CustomerHomeScreen.routeName);
           });
         } on FirebaseAuthException catch (error) {
           if (error.code == 'weak-password') {
@@ -191,7 +191,7 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
                             ? null
                             : FileImage(File(_imageFile!.path)),
                         child: _imageFile == null
-                            ? Icon(
+                            ? const Icon(
                                 Icons.person,
                                 size: 70,
                                 color: Colors.white,
@@ -287,7 +287,10 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
                     HaveAccount(
                       actionLabel: "Log In",
                       haveAccont: "Already have account? ",
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(
+                            context, CustomerLoginScreen.routeName);
+                      },
                     ),
                     processing
                         ? const CircularProgressIndicator()

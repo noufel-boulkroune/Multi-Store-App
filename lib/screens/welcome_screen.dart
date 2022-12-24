@@ -8,6 +8,7 @@ import 'package:multi_store_app/auth/customer_signup_screen.dart';
 import 'package:multi_store_app/screens/customer_home_screen.dart';
 import 'package:multi_store_app/screens/supplier_home_screen.dart';
 
+import '../auth/customer_login_screen.dart';
 import '/widgets/blue_button.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -195,7 +196,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           lable: "Log In",
                           onPressed: () {
                             Navigator.pushReplacementNamed(
-                                context, CustomerHomeScreen.routeName);
+                                context, CustomerLoginScreen.routeName);
                           },
                           width: .25,
                           color: Colors.lightBlueAccent,
@@ -239,7 +240,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       onPressed: () {},
                     ),
                     _processing
-                        ? CircularProgressIndicator()
+                        ? const CircularProgressIndicator()
                         : GoogleFacebookLogIn(
                             image: const Icon(
                               Icons.person,
