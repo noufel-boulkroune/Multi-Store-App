@@ -4,10 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+// ignore: depend_on_referenced_packages
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:multi_store_app/auth/customer_signup_screen.dart';
 import 'package:multi_store_app/screens/customer_home_screen.dart';
-import 'package:multi_store_app/screens/supplier_home_screen.dart';
 
 import '../auth/customer_login_screen.dart';
 import '../auth/supplier_login_screen.dart';
@@ -277,6 +277,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                 });
                               });
 
+                              // ignore: use_build_context_synchronously
                               Navigator.pushReplacementNamed(
                                   context, CustomerHomeScreen.routeName);
                             },

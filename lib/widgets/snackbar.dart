@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SnackBarHundler {
+  // SnackBarHundler(GlobalKey<ScaffoldState> scafoldKey, String message);
+
   static void showSnackBar(var scafoldKey, String message) {
     scafoldKey.currentState!.hideCurrentSnackBar();
     scafoldKey.currentState!.showSnackBar(SnackBar(
