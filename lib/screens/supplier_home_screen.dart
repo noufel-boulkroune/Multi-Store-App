@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:multi_store_app/screens/dashboard_screen.dart';
 import 'package:multi_store_app/screens/home_screen.dart';
-import 'package:multi_store_app/screens/stores.dart';
+import 'package:multi_store_app/screens/stores_screen.dart';
+import 'package:multi_store_app/screens/upload_products_screen.dart';
 
 import 'category_screen.dart';
 
@@ -20,7 +21,7 @@ class _SupplierHomeScreenState extends State<SupplierHomeScreen> {
     CategoryScreen(),
     StoresScreen(),
     DashboardScreen(),
-    Center(child: Text("Upload")),
+    UploadProductsScreen(),
   ];
   @override
   Widget build(BuildContext context) {

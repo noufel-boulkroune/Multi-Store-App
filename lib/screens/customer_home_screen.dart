@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:multi_store_app/screens/cart_screen.dart';
 import 'package:multi_store_app/screens/home_screen.dart';
 import 'package:multi_store_app/screens/profile_screen.dart';
-import 'package:multi_store_app/screens/stores.dart';
+import 'package:multi_store_app/screens/stores_screen.dart';
 
 import 'category_screen.dart';
 

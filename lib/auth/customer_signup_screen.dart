@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,7 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storege;
 import 'package:multi_store_app/auth/customer_login_screen.dart';
 
-import '../screens/customer_home_screen.dart';
 import '../widgets/auth_widgets.dart';
 import '../widgets/snackbar.dart';
 
@@ -28,6 +29,7 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
   late String name, email, password, profileImage, _userid;
   bool processing = false;
   XFile? _imageFile;
+  // ignore: unused_field
   dynamic _pickedImageError;
 
   CollectionReference customers =
@@ -60,7 +62,7 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
       setState(() {
         _pickedImageError = error;
       });
-      print(_pickedImageError);
+      // print(_pickedImageError);
     }
   }
 
@@ -79,7 +81,7 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
       setState(() {
         _pickedImageError = error;
       });
-      print(_pickedImageError);
+      // print(_pickedImageError);
     }
   }
 
@@ -126,6 +128,7 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
               });
             });
 
+            // ignore: use_build_context_synchronously
             Navigator.pushNamed(context, CustomerLoginScreen.routeName);
           });
         } on FirebaseAuthException catch (error) {
