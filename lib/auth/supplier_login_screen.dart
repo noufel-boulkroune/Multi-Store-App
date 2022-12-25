@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../auth/customer_signup_screen.dart';
 import '../screens/supplier_home_screen.dart';
 import '../widgets/auth_widgets.dart';
@@ -55,6 +54,10 @@ class _SupplierLoginScreenState extends State<SupplierLoginScreen> {
           });
         });
 
+<<<<<<< HEAD
+=======
+        // ignore: use_build_context_synchronously
+>>>>>>> b74a0daf783ed6e9867a795be68112612a8b37ed
         Navigator.pushReplacementNamed(context, SupplierHomeScreen.routeName);
       } on FirebaseAuthException catch (error) {
         if (error.code == 'user-not-found') {

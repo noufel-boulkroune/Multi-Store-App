@@ -124,7 +124,6 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
                 processing = false;
               });
             });
-
             Navigator.pushNamed(context, CustomerLoginScreen.routeName);
           });
         } on FirebaseAuthException catch (error) {
