@@ -8,7 +8,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storege;
 import 'package:multi_store_app/auth/customer_login_screen.dart';
 
-import '../screens/customer_home_screen.dart';
 import '../widgets/auth_widgets.dart';
 import '../widgets/snackbar.dart';
 

@@ -50,19 +50,7 @@ class DashboardScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              GeneralAlertDialog.showMyDialog(
-                context: context,
-                title: 'Log Out',
-                contet: 'Are you sure you want to logout?',
-                tabNo: () {
-                  Navigator.of(context).pop();
-                },
-                tabYes: () async {
-                  await FirebaseAuth.instance.signOut();
-                  Navigator.of(context).pop();
-                  Navigator.pushReplacementNamed(context, "/");
-                },
-              );
+              Navigator.pushReplacementNamed(context, "/");
             },
             icon: const Icon(
               Icons.logout,
