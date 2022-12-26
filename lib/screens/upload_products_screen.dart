@@ -1,35 +1,96 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
 import 'package:multi_store_app/widgets/snackbar.dart';
 
-class UploadProductsScreen extends StatelessWidget {
+class UploadProductsScreen extends StatefulWidget {
   const UploadProductsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    final GlobalKey<ScaffoldMessengerState> _scafoldKey =
-        GlobalKey<ScaffoldMessengerState>();
+  State<UploadProductsScreen> createState() => _UploadProductsScreenState();
+}
 
-    late double price;
-    late int quantity;
-    late String productName;
-    late String productDescription;
+class _UploadProductsScreenState extends State<UploadProductsScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldMessengerState> _scafoldKey =
+      GlobalKey<ScaffoldMessengerState>();
 
-    void uploadProduct() {
-      if (_formKey.currentState!.validate()) {
+  late double price;
+  late int quantity;
+  late String productName;
+  late String productDescription;
+
+  List<XFile>? _imagesFileList;
+  dynamic _pickedImageError;
+
+  void _pickProductImages() async {
+    try {
+      await ImagePicker()
+          .pickMultiImage(
+        maxHeight: 300,
+        maxWidth: 300,
+        imageQuality: 95,
+      )
+          .then((value) {
+        setState(() {
+          _imagesFileList = value;
+        });
+      });
+    } catch (error) {
+      setState(() {
+        _pickedImageError = error;
+      });
+      print(_pickedImageError);
+    }
+  }
+
+  Widget previewImages() {
+    if (_imagesFileList!.isNotEmpty) {
+      return ListView.builder(
+        itemBuilder: (context, index) {
+          return Image.file(File(_imagesFileList![index].path));
+        },
+        itemCount: _imagesFileList == null ? 0 : _imagesFileList!.length,
+      );
+    } else {
+      return Center(
+        child: Text(
+          "You didn't \n pick images",
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+  }
+
+  void uploadProduct() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      if (_imagesFileList!.isNotEmpty) {
         print("valid");
         print(price);
         print(quantity);
         print(productName);
         print(productDescription);
-      } else {
-        SnackBarHundler.showSnackBar(_scafoldKey, "pleas fill all fields");
-      }
-    }
 
+        setState(() {
+          _imagesFileList = null;
+        });
+        _formKey.currentState!.reset();
+      } else {
+        SnackBarHundler.showSnackBar(_scafoldKey, "pleas pick images first");
+      }
+    } else {
+      SnackBarHundler.showSnackBar(_scafoldKey, "pleas fill all fields");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return ScaffoldMessenger(
       key: _scafoldKey,
       child: Scaffold(
@@ -42,16 +103,40 @@ class UploadProductsScreen extends StatelessWidget {
               child: Column(children: [
                 Row(
                   children: [
-                    Container(
-                      color: Colors.blueGrey.shade100,
-                      width: size.width * 0.45,
-                      height: size.width * 0.45,
-                      child: const Center(
-                        child: Text(
-                          "You didn't \n pick images",
-                          textAlign: TextAlign.center,
+                    Stack(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            _pickProductImages();
+                          },
+                          child: Container(
+                              color: Colors.blueGrey.shade100,
+                              width: size.width * 0.45,
+                              height: size.width * 0.45,
+                              child: _imagesFileList != null
+                                  ? previewImages()
+                                  : const Center(
+                                      child: Text(
+                                        "You didn't \n pick images",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )),
                         ),
-                      ),
+                        _imagesFileList == [] || _imagesFileList == null
+                            ? SizedBox()
+                            : Positioned(
+                                top: 0,
+                                right: 0,
+                                child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _imagesFileList = null;
+                                    });
+                                  },
+                                  icon: Icon(Icons.delete_forever),
+                                ),
+                              )
+                      ],
                     ),
                   ],
                 ),
@@ -151,8 +236,18 @@ class UploadProductsScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             FloatingActionButton(
-              onPressed: () {},
-              child: const Icon(Icons.photo_library),
+              onPressed: _imagesFileList == [] || _imagesFileList == null
+                  ? () {
+                      _pickProductImages();
+                    }
+                  : () {
+                      setState(() {
+                        _imagesFileList = null;
+                      });
+                    },
+              child: _imagesFileList == [] || _imagesFileList == null
+                  ? Icon(Icons.photo_library)
+                  : Icon(Icons.delete_forever),
             ),
             const SizedBox(
               width: 10,
