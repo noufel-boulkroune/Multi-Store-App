@@ -5,7 +5,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:multi_store_app/widgets/snackbar.dart';
+import '/utilities/category_list.dart';
+import '/widgets/snackbar.dart';
 
 class UploadProductsScreen extends StatefulWidget {
   const UploadProductsScreen({super.key});
@@ -23,9 +24,18 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
   late int quantity;
   late String productName;
   late String productDescription;
+  String? mainCategoryValue = mainCategory[0];
+  String? subCategoryValue = men[0];
+  List<String> subCategoryList = [];
 
   List<XFile>? _imagesFileList;
   dynamic _pickedImageError;
+
+  @override
+  void initState() {
+    subCategoryList = men;
+    super.initState();
+  }
 
   void _pickProductImages() async {
     try {
@@ -57,12 +67,72 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
         itemCount: _imagesFileList == null ? 0 : _imagesFileList!.length,
       );
     } else {
-      return Center(
+      return const Center(
         child: Text(
           "You didn't \n pick images",
           textAlign: TextAlign.center,
         ),
       );
+    }
+  }
+
+  void subcategorySelector() {
+    switch (mainCategoryValue) {
+      case "women":
+        {
+          subCategoryList = women;
+          subCategoryValue = subCategoryList[0];
+        }
+        break;
+      case "electronics":
+        {
+          subCategoryList = electronics;
+          subCategoryValue = subCategoryList[0];
+        }
+        break;
+      case "accessories":
+        {
+          subCategoryList = accessories;
+          subCategoryValue = subCategoryList[0];
+        }
+        break;
+      case "shoes":
+        {
+          subCategoryList = shoes;
+          subCategoryValue = subCategoryList[0];
+        }
+        break;
+      case "home & garden":
+        {
+          subCategoryList = homeAndGarden;
+          subCategoryValue = subCategoryList[0];
+        }
+        break;
+      case "beauty":
+        {
+          subCategoryList = beauty;
+          subCategoryValue = subCategoryList[0];
+        }
+        break;
+      case "kids":
+        {
+          subCategoryList = kids;
+          subCategoryValue = subCategoryList[0];
+        }
+        break;
+      case "bags":
+        {
+          subCategoryList = bags;
+          subCategoryValue = subCategoryList[0];
+        }
+        break;
+
+      default:
+        {
+          subCategoryList = men;
+          subCategoryValue = subCategoryList[0];
+        }
+        break;
     }
   }
 
@@ -78,6 +148,10 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
 
         setState(() {
           _imagesFileList = null;
+          mainCategoryValue = mainCategory[0];
+          subCategoryValue = men[0];
+          subCategoryList = men;
+          subCategoryValue = subCategoryList[0];
         });
         _formKey.currentState!.reset();
       } else {
@@ -123,7 +197,7 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
                                     )),
                         ),
                         _imagesFileList == [] || _imagesFileList == null
-                            ? SizedBox()
+                            ? const SizedBox()
                             : Positioned(
                                 top: 0,
                                 right: 0,
@@ -133,11 +207,71 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
                                       _imagesFileList = null;
                                     });
                                   },
-                                  icon: Icon(Icons.delete_forever),
+                                  icon: const Icon(Icons.delete_forever),
                                 ),
-                              )
+                              ),
                       ],
                     ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    SizedBox(
+                      width: size.width * 0.45,
+                      height: size.width * 0.45,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Text(
+                            "Select main category",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          DropdownButton(
+                            iconSize: 30,
+                            menuMaxHeight: 300,
+                            isExpanded: true,
+                            alignment: Alignment.center,
+                            value: mainCategoryValue,
+                            items: mainCategory.map((mainCategoryName) {
+                              return DropdownMenuItem(
+                                value: mainCategoryName,
+                                child: Text(mainCategoryName),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                mainCategoryValue = value;
+                                subcategorySelector();
+                              });
+                            },
+                          ),
+                          const Text(
+                            "Select subcategory",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          DropdownButton(
+                            iconSize: 30,
+                            alignment: Alignment.center,
+                            isExpanded: true,
+                            menuMaxHeight: 300,
+                            value: subCategoryValue,
+                            items: subCategoryList.map((subCategoryName) {
+                              return DropdownMenuItem(
+                                value: subCategoryName,
+                                child: Text(subCategoryName),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                subCategoryValue = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
                 const Padding(
@@ -246,8 +380,8 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
                       });
                     },
               child: _imagesFileList == [] || _imagesFileList == null
-                  ? Icon(Icons.photo_library)
-                  : Icon(Icons.delete_forever),
+                  ? const Icon(Icons.photo_library)
+                  : const Icon(Icons.delete_forever),
             ),
             const SizedBox(
               width: 10,
