@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storege;
+import 'package:path/path.dart' as path;
 
 import '/utilities/category_list.dart';
 import '/widgets/snackbar.dart';
@@ -29,7 +31,10 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
   List<String> subCategoryList = [];
 
   List<XFile>? _imagesFileList;
+  List<String> _imagesUrlList = [];
   dynamic _pickedImageError;
+
+  bool processing = false;
 
   @override
   void initState() {
@@ -62,7 +67,10 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
     if (_imagesFileList!.isNotEmpty) {
       return ListView.builder(
         itemBuilder: (context, index) {
-          return Image.file(File(_imagesFileList![index].path));
+          return Image.file(
+            File(_imagesFileList![index].path),
+            fit: BoxFit.fill,
+          );
         },
         itemCount: _imagesFileList == null ? 0 : _imagesFileList!.length,
       );
@@ -136,22 +144,47 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
     }
   }
 
-  void uploadProduct() {
+  void uploadProduct() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       if (_imagesFileList!.isNotEmpty) {
+        try {
+          setState(() {
+            processing = true;
+          });
+
+          for (var image in _imagesFileList!) {
+            firebase_storege.Reference reference =
+                firebase_storege.FirebaseStorage.instance.ref(
+              "product-images/${path.basename(image.path)}.jpg",
+            );
+            await reference.putFile(File(image.path)).whenComplete(() async {
+              await reference.getDownloadURL().then((value) {
+                _imagesUrlList.add(value);
+              });
+            });
+          }
+        } catch (error) {
+          print(error);
+        }
+        setState(() {
+          processing = false;
+        });
+
         print("valid");
         print(price);
         print(quantity);
         print(productName);
         print(productDescription);
-
+        print(mainCategoryValue);
+        print(subCategoryValue);
         setState(() {
           _imagesFileList = null;
           mainCategoryValue = mainCategory[0];
           subCategoryValue = men[0];
           subCategoryList = men;
           subCategoryValue = subCategoryList[0];
+          FocusScope.of(context).unfocus();
         });
         _formKey.currentState!.reset();
       } else {
@@ -390,7 +423,13 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
               onPressed: () {
                 uploadProduct();
               },
-              child: const Icon(Icons.upload),
+              child: processing == true
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Icon(Icons.upload),
             )
           ],
         ),
