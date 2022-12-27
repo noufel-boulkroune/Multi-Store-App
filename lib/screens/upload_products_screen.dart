@@ -2,6 +2,8 @@
 
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storege;
@@ -22,6 +24,7 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
   final GlobalKey<ScaffoldMessengerState> _scafoldKey =
       GlobalKey<ScaffoldMessengerState>();
 
+  final supplierUid = FirebaseAuth.instance.currentUser!.uid;
   late double price;
   late int quantity;
   late String productName;
@@ -42,7 +45,7 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
     super.initState();
   }
 
-  void _pickProductImages() async {
+  void pickProductImages() async {
     try {
       await ImagePicker()
           .pickMultiImage(
@@ -144,13 +147,14 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
     }
   }
 
-  void uploadProduct() async {
+  void uploadProducts() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       if (_imagesFileList!.isNotEmpty) {
         try {
           setState(() {
             processing = true;
+            _imagesUrlList = [];
           });
 
           for (var image in _imagesFileList!) {
@@ -164,35 +168,44 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
               });
             });
           }
+          uploadData();
         } catch (error) {
           print(error);
         }
-        setState(() {
-          processing = false;
-        });
-
-        print("valid");
-        print(price);
-        print(quantity);
-        print(productName);
-        print(productDescription);
-        print(mainCategoryValue);
-        print(subCategoryValue);
-        setState(() {
-          _imagesFileList = null;
-          mainCategoryValue = mainCategory[0];
-          subCategoryValue = men[0];
-          subCategoryList = men;
-          subCategoryValue = subCategoryList[0];
-          FocusScope.of(context).unfocus();
-        });
-        _formKey.currentState!.reset();
       } else {
         SnackBarHundler.showSnackBar(_scafoldKey, "pleas pick images first");
       }
     } else {
       SnackBarHundler.showSnackBar(_scafoldKey, "pleas fill all fields");
     }
+  }
+
+  void uploadData() async {
+    if (_imagesUrlList.isNotEmpty) {
+      CollectionReference productReferance =
+          FirebaseFirestore.instance.collection("products");
+      await productReferance.doc().set({
+        "mainCategory": mainCategoryValue,
+        "subCaategory": subCategoryValue,
+        "price": price,
+        "inStock": quantity,
+        "productName": productName,
+        "productDescription": productDescription,
+        "supplierId": supplierUid,
+        "productImages": _imagesUrlList,
+        "discount": 0
+      });
+    }
+    setState(() {
+      processing = false;
+      _imagesFileList = null;
+      mainCategoryValue = mainCategory[0];
+      subCategoryValue = men[0];
+      subCategoryList = men;
+      subCategoryValue = subCategoryList[0];
+      FocusScope.of(context).unfocus();
+    });
+    _formKey.currentState!.reset();
   }
 
   @override
@@ -214,7 +227,7 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
                       children: [
                         InkWell(
                           onTap: () {
-                            _pickProductImages();
+                            pickProductImages();
                           },
                           child: Container(
                               color: Colors.blueGrey.shade100,
@@ -405,7 +418,7 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
             FloatingActionButton(
               onPressed: _imagesFileList == [] || _imagesFileList == null
                   ? () {
-                      _pickProductImages();
+                      pickProductImages();
                     }
                   : () {
                       setState(() {
@@ -421,7 +434,7 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
             ),
             FloatingActionButton(
               onPressed: () {
-                uploadProduct();
+                uploadProducts();
               },
               child: processing == true
                   ? const Center(
