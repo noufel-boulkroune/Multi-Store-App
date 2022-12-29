@@ -2,12 +2,13 @@
 
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storege;
 import 'package:path/path.dart' as path;
+import 'package:uuid/uuid.dart';
 
 import '/utilities/category_list.dart';
 import '/widgets/snackbar.dart';
@@ -29,6 +30,7 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
   late int quantity;
   late String productName;
   late String productDescription;
+  late String productId;
   String? mainCategoryValue = mainCategory[0];
   String? subCategoryValue = men[0];
   List<String> subCategoryList = [];
@@ -38,6 +40,8 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
   dynamic _pickedImageError;
 
   bool processing = false;
+
+  var uuid = Uuid();
 
   @override
   void initState() {
@@ -184,7 +188,8 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
     if (_imagesUrlList.isNotEmpty) {
       CollectionReference productReferance =
           FirebaseFirestore.instance.collection("products");
-      await productReferance.doc().set({
+      productId = uuid.v4();
+      await productReferance.doc(productId).set({
         "mainCategory": mainCategoryValue,
         "subCaategory": subCategoryValue,
         "price": price,
@@ -434,7 +439,9 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
             ),
             FloatingActionButton(
               onPressed: () {
-                uploadProducts();
+                if (processing == false) {
+                  uploadProducts();
+                }
               },
               child: processing == true
                   ? const Center(
