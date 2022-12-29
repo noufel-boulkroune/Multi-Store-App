@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:multi_store_app/galleries/accessories_gallery_screen.dart';
+import 'package:multi_store_app/galleries/bags_gallery_screen.dart';
+import 'package:multi_store_app/galleries/beauty_gallery_screen.dart';
+import 'package:multi_store_app/galleries/electronics_gallery_screen.dart';
+import 'package:multi_store_app/galleries/home_and_garden_gallery_screen.dart';
+import 'package:multi_store_app/galleries/kids_gallery_screen.dart';
+import 'package:multi_store_app/galleries/shoes_gallery_screen.dart';
+import 'package:multi_store_app/galleries/women_gallery_screen.dart';
 
-import '../galleries/men_galleries_screen.dart';
+import '../galleries/men_gallery_screen.dart';
 import '../widgets/custom_search_bar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -42,15 +50,15 @@ class _HomeScreenState extends State<HomeScreen> {
               ]),
         ),
         body: const TabBarView(children: [
-          MenGalleriesScreen(),
-          Center(child: Text("Women Screen")),
-          Center(child: Text("Shoes Screen")),
-          Center(child: Text("Bags Screen")),
-          Center(child: Text("Electronics Screen")),
-          Center(child: Text("Accessories Screen")),
-          Center(child: Text("Home & Garden Screen")),
-          Center(child: Text("Kids Screen")),
-          Center(child: Text("Beauty Screen")),
+          MenGalleryScreen(),
+          WomenGalleryScreen(),
+          ShoesGalleryScreen(),
+          BagsGalleryScreen(),
+          ElectronicsGalleryScreen(),
+          AccessoriesGalleryScreen(),
+          HomeAndGardenGalleryScreen(),
+          KidsGalleryScreen(),
+          BeautyGalleryScreen(),
         ]),
       ),
     );
