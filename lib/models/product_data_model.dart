@@ -4,18 +4,21 @@ import 'package:flutter/material.dart';
 import '../screens/minor_screen/product_detail_screen.dart';
 
 class ProductDataModel extends StatelessWidget {
-  final List<QueryDocumentSnapshot<Object?>> data;
-  final int index;
+  final dynamic data;
+
   const ProductDataModel({
     Key? key,
     required this.data,
-    required this.index,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.pushNamed(context, ProductDetailScreen.routeName),
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetailScreen(product: data),
+          )),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Card(
@@ -31,15 +34,14 @@ class ProductDataModel extends StatelessWidget {
                 child: Container(
                   constraints:
                       const BoxConstraints(maxHeight: 250, minHeight: 100),
-                  child: Image(
-                      image: NetworkImage(data[index]["productImages"][0])),
+                  child: Image(image: NetworkImage(data["productImages"][0])),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
                     child: Text(
-                  data[index]["productName"],
+                  data["productName"],
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     fontSize: 16,
@@ -56,7 +58,7 @@ class ProductDataModel extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
-                      data[index]["price"].toStringAsFixed(2) + " \$",
+                      data["price"].toStringAsFixed(2) + " \$",
                       style: TextStyle(
                         color: Colors.red.shade600,
                         fontSize: 16,

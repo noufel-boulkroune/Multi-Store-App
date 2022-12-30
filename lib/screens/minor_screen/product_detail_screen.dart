@@ -7,41 +7,87 @@ import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
 import '../../models/product_data_model.dart';
 import '../../widgets/blue_button.dart';
+import 'full_screen_view.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   static const routeName = "product_detail_screen";
-  const ProductDetailScreen({super.key});
+  final dynamic product;
+  ProductDetailScreen({super.key, required this.product});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  final Stream<QuerySnapshot> _productsStream =
-      FirebaseFirestore.instance.collection('products').snapshots();
+  late List<dynamic> imagesList = widget.product["productImages"];
   @override
   Widget build(BuildContext context) {
+    final product = widget.product;
+    final Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
+        .collection('products')
+        .where("mainCategory", isEqualTo: product["mainCategory"])
+        .snapshots();
     return SafeArea(
       child: Scaffold(
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.fromLTRB(10, 0, 10, 50),
           child: SingleChildScrollView(
-            child: Column(children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .45,
-                // width: double.infinity,
-                child: Swiper(
-                    pagination: const SwiperPagination(
-                        builder: SwiperPagination.fraction),
-                    itemBuilder: (context, index) {
-                      return const Image(
-                          image: NetworkImage(
-                              "https://cdn.dxomark.com/wp-content/uploads/medias/post-106688/Samsung-Galaxy-S22-Ultra-featured-image-packshot-review-Recovered-1024x691.jpg"));
-                    },
-                    itemCount: 1),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FullScreenView(
+                          imagesList: imagesList,
+                        ),
+                      ));
+                },
+                child: Stack(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .45,
+                      // width: double.infinity,
+                      child: Swiper(
+                          pagination: const SwiperPagination(
+                            builder: SwiperPagination.fraction,
+                          ),
+                          itemBuilder: (context, index) {
+                            return Image(
+                              image: NetworkImage(imagesList[index]),
+                              fit: BoxFit.cover,
+                            );
+                          },
+                          itemCount: imagesList.length),
+                    ),
+                    Positioned(
+                        top: 20,
+                        left: 10,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.lightBlueAccent,
+                          child: IconButton(
+                              color: Colors.white,
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: Icon(Icons.arrow_back_ios_new)),
+                        )),
+                    Positioned(
+                        top: 20,
+                        right: 10,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.lightBlueAccent,
+                          child: IconButton(
+                              color: Colors.white,
+                              onPressed: () {},
+                              icon: Icon(Icons.share)),
+                        )),
+                  ],
+                ),
               ),
               Text(
-                "product name",
+                product["productName"],
                 style: TextStyle(
                   color: Colors.grey.shade600,
                   fontSize: 18,
@@ -52,7 +98,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
-                    children: const [
+                    children: [
                       Text(
                         "USD",
                         style: TextStyle(
@@ -65,7 +111,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         width: 10,
                       ),
                       Text(
-                        "99.99",
+                        product["price"].toString(),
                         style: TextStyle(
                           color: Colors.red,
                           fontSize: 20,
@@ -83,8 +129,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       )),
                 ],
               ),
-              const Text(
-                "99 pieces available in stock",
+              Text(
+                product["inStock"].toString() + " pieces available in stock",
                 style: TextStyle(
                   color: Colors.blueGrey,
                   fontSize: 16,
@@ -97,7 +143,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 lable: "   Item Description   ",
               ),
               Text(
-                "product Description",
+                product["productDescription"],
                 style: TextStyle(
                   color: Colors.blueGrey.shade800,
                   fontSize: 20,
@@ -142,8 +188,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         crossAxisCount: 2,
                         itemBuilder: (context, index) {
                           return ProductDataModel(
-                            data: data,
-                            index: index,
+                            data: data[index],
                           );
                         },
                         staggeredTileBuilder: (index) {
@@ -157,25 +202,28 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ]),
           ),
         ),
-        bottomSheet: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                IconButton(onPressed: () {}, icon: Icon(Icons.store)),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.shopping_cart),
-                ),
-              ],
-            ),
-            BlueButton(
-              lable: 'ADD TO CART',
-              color: Colors.lightBlueAccent,
-              width: .5,
-              onPressed: () {},
-            ),
-          ],
+        bottomSheet: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  IconButton(onPressed: () {}, icon: Icon(Icons.store)),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.shopping_cart),
+                  ),
+                ],
+              ),
+              BlueButton(
+                lable: 'ADD TO CART',
+                color: Colors.lightBlueAccent,
+                width: .5,
+                onPressed: () {},
+              ),
+            ],
+          ),
         ),
       ),
     );

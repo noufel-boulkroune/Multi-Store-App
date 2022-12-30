@@ -8,7 +8,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'auth/customer_login_screen.dart';
 import 'auth/supplier_login_screen.dart';
 import 'auth/supplier_signup_screen.dart';
-import 'screens/minor_screen/product_detail_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +37,6 @@ class MyApp extends StatelessWidget {
         SupplierSignupScreen.routeName: (context) =>
             const SupplierSignupScreen(),
         SupplierLoginScreen.routeName: (context) => const SupplierLoginScreen(),
-        ProductDetailScreen.routeName: (context) => const ProductDetailScreen(),
       },
     );
   }
