@@ -197,6 +197,7 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
         "productName": productName,
         "productDescription": productDescription,
         "supplierId": supplierUid,
+        "productId": productId,
         "productImages": _imagesUrlList,
         "discount": 0
       });
