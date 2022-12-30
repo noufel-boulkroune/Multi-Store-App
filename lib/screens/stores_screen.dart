@@ -62,7 +62,7 @@ class StoresScreen extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => VisirStoreScreen(
+                            builder: (context) => VisitStoreScreen(
                               supplierId: data[index]["supplierId"],
                             ),
                           ));

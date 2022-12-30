@@ -10,7 +10,9 @@ class BalanceScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         title: const AppBarTitle(title: "Balnce Screen"),
-        leading: const AppBarBackButton(),
+        leading: AppBarBackButton(
+          color: Colors.black,
+        ),
       ),
     );
   }

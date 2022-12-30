@@ -1,13 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_store_app/widgets/appbar_widget.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
 import '../../models/product_data_model.dart';
 
-class VisirStoreScreen extends StatelessWidget {
+class VisitStoreScreen extends StatefulWidget {
   final String supplierId;
-  const VisirStoreScreen({super.key, required this.supplierId});
+  const VisitStoreScreen({super.key, required this.supplierId});
+
+  @override
+  State<VisitStoreScreen> createState() => _VisitStoreScreenState();
+}
+
+class _VisitStoreScreenState extends State<VisitStoreScreen> {
+  bool following = false;
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +25,11 @@ class VisirStoreScreen extends StatelessWidget {
 
     final Stream<QuerySnapshot> productsStream = FirebaseFirestore.instance
         .collection('products')
-        .where("supplierId", isEqualTo: supplierId)
+        .where("supplierId", isEqualTo: widget.supplierId)
         .snapshots();
 
     return FutureBuilder<DocumentSnapshot>(
-      future: suppliers.doc(supplierId).get(),
+      future: suppliers.doc(widget.supplierId).get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
@@ -47,6 +56,9 @@ class VisirStoreScreen extends StatelessWidget {
               snapshot.data!.data() as Map<String, dynamic>;
           return Scaffold(
             appBar: AppBar(
+              leading: AppBarBackButton(
+                color: Colors.white,
+              ),
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -67,7 +79,7 @@ class VisirStoreScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 30,
                   ),
                   Expanded(
@@ -76,26 +88,57 @@ class VisirStoreScreen extends StatelessWidget {
                       children: [
                         Text(
                           data["storeName"].toString().toUpperCase(),
-                          style: TextStyle(fontSize: 20),
+                          style: const TextStyle(fontSize: 20),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Container(
-                          height: 35,
-                          width: MediaQuery.of(context).size.width * .3,
-                          decoration: BoxDecoration(
-                              color: Colors.lightBlueAccent.withOpacity(.7),
-                              border: Border.all(width: 1, color: Colors.white),
-                              borderRadius: BorderRadius.circular(25)),
-                          child: Center(
-                              child: Text(
-                            "FOLLOW",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          )),
-                        )
+                            height: 35,
+                            width: MediaQuery.of(context).size.width * .3,
+                            decoration: BoxDecoration(
+                                color: Colors.lightBlueAccent.withOpacity(.7),
+                                border:
+                                    Border.all(width: 1, color: Colors.white),
+                                borderRadius: BorderRadius.circular(25)),
+                            child: data["supplierId"] ==
+                                    FirebaseAuth.instance.currentUser!.uid
+                                ? MaterialButton(
+                                    onPressed: () {
+                                      setState(() {});
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: const [
+                                        Text(
+                                          "EDIT",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        Icon(
+                                          Icons.edit,
+                                          color: Colors.white,
+                                        )
+                                      ],
+                                    ))
+                                : MaterialButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        following = !following;
+                                      });
+                                    },
+                                    child: following
+                                        ? const Text(
+                                            "FOLLOWING",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          )
+                                        : const Text(
+                                            "FOLLOW",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                  ))
                       ],
                     ),
                   )
@@ -152,6 +195,14 @@ class VisirStoreScreen extends StatelessWidget {
                 );
               },
             ),
+            floatingActionButton:
+                data["supplierId"] == FirebaseAuth.instance.currentUser!.uid
+                    ? null
+                    : FloatingActionButton(
+                        backgroundColor: Colors.lightBlueAccent,
+                        onPressed: () {},
+                        child: const Icon(Icons.phone),
+                      ),
           );
         }
 

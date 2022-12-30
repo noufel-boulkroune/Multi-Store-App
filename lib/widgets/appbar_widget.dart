@@ -1,8 +1,11 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 class AppBarBackButton extends StatelessWidget {
-  const AppBarBackButton({
+  Color color;
+  AppBarBackButton({
     Key? key,
+    required this.color,
   }) : super(key: key);
 
   @override
@@ -11,9 +14,9 @@ class AppBarBackButton extends StatelessWidget {
         onPressed: () {
           Navigator.pop(context);
         },
-        icon: const Icon(
+        icon: Icon(
           Icons.arrow_back_ios_new,
-          color: Colors.black,
+          color: color,
         ));
   }
 }

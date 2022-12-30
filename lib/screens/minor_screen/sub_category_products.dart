@@ -26,7 +26,9 @@ class SubCategoryProducts extends StatelessWidget {
         appBar: AppBar(
             elevation: 0,
             backgroundColor: Colors.white,
-            leading: const AppBarBackButton(),
+            leading: AppBarBackButton(
+              color: Colors.black,
+            ),
             title: AppBarTitle(title: subCategoryName)),
         body: StreamBuilder<QuerySnapshot>(
           stream: _productsStream,

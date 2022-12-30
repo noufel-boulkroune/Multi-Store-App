@@ -23,7 +23,9 @@ class _FullScreenViewState extends State<FullScreenView> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        leading: const AppBarBackButton(),
+        leading: AppBarBackButton(
+          color: Colors.black,
+        ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
