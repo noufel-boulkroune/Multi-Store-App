@@ -53,8 +53,7 @@ class _ShoesGalleryScreenState extends State<ShoesGalleryScreen> {
           crossAxisCount: 2,
           itemBuilder: (context, index) {
             return ProductDataModel(
-              data: data,
-              index: index,
+              data: data[index],
             );
           },
           staggeredTileBuilder: (index) {

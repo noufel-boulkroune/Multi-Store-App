@@ -55,8 +55,7 @@ class _ElectronicsGalleryScreenState extends State<ElectronicsGalleryScreen> {
           crossAxisCount: 2,
           itemBuilder: (context, index) {
             return ProductDataModel(
-              data: data,
-              index: index,
+              data: data[index],
             );
           },
           staggeredTileBuilder: (index) {
