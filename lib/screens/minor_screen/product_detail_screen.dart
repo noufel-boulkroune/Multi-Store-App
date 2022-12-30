@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
+import 'package:multi_store_app/screens/minor_screen/visit_store_screen.dart';
 
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
@@ -209,7 +210,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             children: [
               Row(
                 children: [
-                  IconButton(onPressed: () {}, icon: Icon(Icons.store)),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VisitStoreScreen(
+                                  supplierId: product["supplierId"]),
+                            ));
+                      },
+                      icon: Icon(Icons.store)),
                   IconButton(
                     onPressed: () {},
                     icon: Icon(Icons.shopping_cart),

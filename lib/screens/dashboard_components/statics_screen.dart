@@ -10,7 +10,9 @@ class StaticsScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         title: const AppBarTitle(title: "Statics Screen"),
-        leading: const AppBarBackButton(),
+        leading: AppBarBackButton(
+          color: Colors.black,
+        ),
       ),
     );
   }
