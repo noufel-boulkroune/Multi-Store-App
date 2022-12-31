@@ -5,7 +5,6 @@ import 'package:collection/collection.dart';
 
 import '../providers/wishlist_provider.dart';
 import '../providers/products_class.dart';
-import '../providers/wishlist_provider.dart';
 import '../widgets/alert_dialog.dart';
 
 class CartModel extends StatelessWidget {

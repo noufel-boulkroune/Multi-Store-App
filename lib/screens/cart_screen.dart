@@ -79,7 +79,7 @@ class _CartScreenState extends State<CartScreen> {
                   lable: 'CHECK OUT',
                   onPressed: () {},
                   width: .4,
-                  color: const Color(0xFFF2B705),
+                  color: Colors.lightBlueAccent,
                 )
               ],
             ),

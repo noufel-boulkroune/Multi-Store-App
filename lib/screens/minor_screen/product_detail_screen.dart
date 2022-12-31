@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
+import 'package:badges/badges.dart';
 import 'package:collection/collection.dart';
 
 import '../../providers/wishlist_provider.dart';
@@ -283,7 +284,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   back: AppBarBackButton(color: Colors.black)),
                             ));
                       },
-                      icon: const Icon(Icons.shopping_cart),
+                      icon: Badge(
+                          animationType: BadgeAnimationType.slide,
+                          badgeColor: Colors.lightBlueAccent,
+                          badgeContent: Text(context
+                              .watch<CartProvider>()
+                              .productsList
+                              .length
+                              .toString()),
+                          child: const Icon(Icons.shopping_cart)),
                     ),
                   ],
                 ),
@@ -292,7 +301,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   color: Colors.lightBlueAccent,
                   width: .5,
                   onPressed: () {
-                    existingInCart != null
+                    existingInCart == null
                         ? SnackBarHundler.showSnackBar(
                             scafoldKey, "This item already in your cart")
                         : context.read<CartProvider>().addItem(
