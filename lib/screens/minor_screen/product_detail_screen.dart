@@ -9,7 +9,7 @@ import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 import 'package:badges/badges.dart';
 import 'package:collection/collection.dart';
 
-import '../../providers/wishlist_provider.dart';
+import '../../providers/wichlist_provider.dart';
 import '/screens/cart_screen.dart';
 import '/screens/minor_screen/visit_store_screen.dart';
 import '/widgets/appbar_widget.dart';
@@ -30,25 +30,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final GlobalKey<ScaffoldMessengerState> scafoldKey =
       GlobalKey<ScaffoldMessengerState>();
   late List<dynamic> imagesList = widget.product["productImages"];
-  late final Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
-      .collection('products')
-      .where("mainCategory", isEqualTo: widget.product["mainCategory"])
-      .snapshots();
-  late var existingInWishlist =
-      context.read<WishlistProvider>().wishlistList.firstWhereOrNull(
-            (wishlistProduct) =>
-                wishlistProduct.documentId == widget.product["productId"],
-          );
-
-  late var existingInCart =
-      context.read<CartProvider>().productsList.firstWhereOrNull(
-            (cartProduct) =>
-                cartProduct.documentId == widget.product["productId"],
-          );
   @override
   Widget build(BuildContext context) {
     final product = widget.product;
-
+    final Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
+        .collection('products')
+        .where("mainCategory", isEqualTo: product["mainCategory"])
+        .snapshots();
     return SafeArea(
       child: ScaffoldMessenger(
         key: scafoldKey,
@@ -147,7 +135,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                         IconButton(
                             onPressed: () {
-                              existingInWishlist != null
+                              context
+                                          .read<WishlistProvider>()
+                                          .wishlistList
+                                          .firstWhereOrNull(
+                                            (wishlistProduct) =>
+                                                wishlistProduct.documentId ==
+                                                product["productId"],
+                                          ) !=
+                                      null
                                   ? context
                                       .read<WishlistProvider>()
                                       .removeFromWishlist(product["productId"])
@@ -301,7 +297,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   color: Colors.lightBlueAccent,
                   width: .5,
                   onPressed: () {
-                    existingInCart == null
+                    context.read<CartProvider>().productsList.firstWhereOrNull(
+                                  (cartProduct) =>
+                                      cartProduct.documentId ==
+                                      product["productId"],
+                                ) !=
+                            null
                         ? SnackBarHundler.showSnackBar(
                             scafoldKey, "This item already in your cart")
                         : context.read<CartProvider>().addItem(
