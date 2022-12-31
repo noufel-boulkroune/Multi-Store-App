@@ -8,6 +8,7 @@ import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 import 'package:collection/collection.dart';
 
+import '../../providers/wichlist_provider.dart';
 import '/screens/cart_screen.dart';
 import '/screens/minor_screen/visit_store_screen.dart';
 import '/widgets/appbar_widget.dart';
@@ -82,7 +83,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    icon: Icon(Icons.arrow_back_ios_new)),
+                                    icon: const Icon(Icons.arrow_back_ios_new)),
                               )),
                           Positioned(
                               top: 20,
@@ -92,7 +93,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 child: IconButton(
                                     color: Colors.white,
                                     onPressed: () {},
-                                    icon: Icon(Icons.share)),
+                                    icon: const Icon(Icons.share)),
                               )),
                         ],
                       ),
@@ -110,7 +111,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       children: [
                         Row(
                           children: [
-                            Text(
+                            const Text(
                               "USD",
                               style: TextStyle(
                                 color: Colors.red,
@@ -118,12 +119,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             Text(
                               product["price"].toString(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.red,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
@@ -132,18 +133,55 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ],
                         ),
                         IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.favorite_border_outlined,
-                              size: 30,
-                              color: Colors.red,
-                            )),
+                            onPressed: () {
+                              context
+                                          .read<WishlistProvider>()
+                                          .wishlistList
+                                          .firstWhereOrNull(
+                                            (wishlistProduct) =>
+                                                wishlistProduct.documentId ==
+                                                product["productId"],
+                                          ) !=
+                                      null
+                                  ? context
+                                      .read<WishlistProvider>()
+                                      .removeFromWishlist(product["productId"])
+                                  : context
+                                      .read<WishlistProvider>()
+                                      .addWishItem(
+                                          product["productName"],
+                                          product["price"],
+                                          1,
+                                          product["inStock"],
+                                          product["productImages"],
+                                          product["productId"],
+                                          product["supplierId"]);
+                            },
+                            icon: context
+                                        .watch<WishlistProvider>()
+                                        .wishlistList
+                                        .firstWhereOrNull(
+                                          (wishlistProduct) =>
+                                              wishlistProduct.documentId ==
+                                              product["productId"],
+                                        ) !=
+                                    null
+                                ? const Icon(
+                                    Icons.favorite,
+                                    size: 30,
+                                    color: Colors.red,
+                                  )
+                                : const Icon(
+                                    Icons.favorite_border_outlined,
+                                    size: 30,
+                                    color: Colors.red,
+                                  )),
                       ],
                     ),
                     Text(
                       product["inStock"].toString() +
                           " pieces available in stock",
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.blueGrey,
                         fontSize: 16,
                       ),
@@ -195,7 +233,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                           return SingleChildScrollView(
                             child: StaggeredGridView.countBuilder(
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemCount: data.length,
                               crossAxisCount: 2,
@@ -216,7 +254,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
           ),
           bottomSheet: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -231,7 +269,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     supplierId: product["supplierId"]),
                               ));
                         },
-                        icon: Icon(Icons.store)),
+                        icon: const Icon(Icons.store)),
                     IconButton(
                       onPressed: () {
                         Navigator.push(
@@ -241,7 +279,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   back: AppBarBackButton(color: Colors.black)),
                             ));
                       },
-                      icon: Icon(Icons.shopping_cart),
+                      icon: const Icon(Icons.shopping_cart),
                     ),
                   ],
                 ),
