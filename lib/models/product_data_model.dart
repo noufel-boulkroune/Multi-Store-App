@@ -3,13 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/wishlist_provider.dart';
+import '../providers/wichlist_provider.dart';
 import '../screens/minor_screen/product_detail_screen.dart';
 import 'package:collection/collection.dart';
 
 import '../widgets/snackbar.dart';
 
-class ProductDataModel extends StatefulWidget {
+class ProductDataModel extends StatelessWidget {
   final dynamic data;
 
   const ProductDataModel({
@@ -18,24 +18,13 @@ class ProductDataModel extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ProductDataModel> createState() => _ProductDataModelState();
-}
-
-class _ProductDataModelState extends State<ProductDataModel> {
-  late var existingInWishlist =
-      context.read<WishlistProvider>().wishlistList.firstWhereOrNull(
-            (wishlistProduct) =>
-                wishlistProduct.documentId == widget.data["productId"],
-          );
-
-  @override
   Widget build(BuildContext context) {
-    dynamic product = widget.data;
+    dynamic product = data;
     return InkWell(
       onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProductDetailScreen(product: widget.data),
+            builder: (context) => ProductDetailScreen(product: data),
           )),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -52,15 +41,14 @@ class _ProductDataModelState extends State<ProductDataModel> {
                 child: Container(
                   constraints:
                       const BoxConstraints(maxHeight: 250, minHeight: 100),
-                  child: Image(
-                      image: NetworkImage(widget.data["productImages"][0])),
+                  child: Image(image: NetworkImage(data["productImages"][0])),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
                     child: Text(
-                  widget.data["productName"],
+                  data["productName"],
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     fontSize: 16,
@@ -77,15 +65,14 @@ class _ProductDataModelState extends State<ProductDataModel> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
-                      widget.data["price"].toStringAsFixed(2) + " \$",
+                      data["price"].toStringAsFixed(2) + " \$",
                       style: TextStyle(
                         color: Colors.red.shade600,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    widget.data["supplierId"] ==
-                            FirebaseAuth.instance.currentUser!.uid
+                    data["supplierId"] == FirebaseAuth.instance.currentUser!.uid
                         ? IconButton(
                             onPressed: () {},
                             icon: const Icon(Icons.edit),
@@ -93,7 +80,15 @@ class _ProductDataModelState extends State<ProductDataModel> {
                           )
                         : IconButton(
                             onPressed: () {
-                              existingInWishlist != null
+                              context
+                                          .read<WishlistProvider>()
+                                          .wishlistList
+                                          .firstWhereOrNull(
+                                            (wishlistProduct) =>
+                                                wishlistProduct.documentId ==
+                                                product["productId"],
+                                          ) !=
+                                      null
                                   ? context
                                       .read<WishlistProvider>()
                                       .removeFromWishlist(product["productId"])

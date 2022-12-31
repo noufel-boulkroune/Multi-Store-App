@@ -10,7 +10,7 @@ import '../screens/welcome_screen.dart';
 import 'auth/customer_login_screen.dart';
 import 'auth/supplier_login_screen.dart';
 import 'auth/supplier_signup_screen.dart';
-import 'providers/wishlist_provider.dart';
+import 'providers/wichlist_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
