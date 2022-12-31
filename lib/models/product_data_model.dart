@@ -1,8 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/wichlist_provider.dart';
 import '../screens/minor_screen/product_detail_screen.dart';
+import 'package:collection/collection.dart';
+
+import '../widgets/snackbar.dart';
 
 class ProductDataModel extends StatelessWidget {
   final dynamic data;
@@ -14,6 +19,7 @@ class ProductDataModel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    dynamic product = data;
     return InkWell(
       onTap: () => Navigator.push(
           context,
@@ -73,10 +79,49 @@ class ProductDataModel extends StatelessWidget {
                             color: Colors.red,
                           )
                         : IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.favorite),
-                            color: Colors.red,
-                          ),
+                            onPressed: () {
+                              context
+                                          .read<WishlistProvider>()
+                                          .wishlistList
+                                          .firstWhereOrNull(
+                                            (wishlistProduct) =>
+                                                wishlistProduct.documentId ==
+                                                product["productId"],
+                                          ) !=
+                                      null
+                                  ? context
+                                      .read<WishlistProvider>()
+                                      .removeFromWishlist(product["productId"])
+                                  : context
+                                      .read<WishlistProvider>()
+                                      .addWishItem(
+                                          product["productName"],
+                                          product["price"],
+                                          1,
+                                          product["inStock"],
+                                          product["productImages"],
+                                          product["productId"],
+                                          product["supplierId"]);
+                            },
+                            icon: context
+                                        .watch<WishlistProvider>()
+                                        .wishlistList
+                                        .firstWhereOrNull(
+                                          (wishlistProduct) =>
+                                              wishlistProduct.documentId ==
+                                              product["productId"],
+                                        ) !=
+                                    null
+                                ? const Icon(
+                                    Icons.favorite,
+                                    size: 30,
+                                    color: Colors.red,
+                                  )
+                                : const Icon(
+                                    Icons.favorite_border_outlined,
+                                    size: 30,
+                                    color: Colors.red,
+                                  )),
                   ],
                 ),
               )

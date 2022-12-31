@@ -10,6 +10,7 @@ import '../screens/welcome_screen.dart';
 import 'auth/customer_login_screen.dart';
 import 'auth/supplier_login_screen.dart';
 import 'auth/supplier_signup_screen.dart';
+import 'providers/wichlist_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +18,9 @@ void main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
       create: (_) => CartProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => WishlistProvider(),
     )
   ], child: const MyApp()));
 }

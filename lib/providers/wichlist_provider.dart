@@ -1,26 +1,26 @@
 import 'package:flutter/foundation.dart';
 import 'package:multi_store_app/providers/products_class.dart';
 
-class CartProvider extends ChangeNotifier {
-  final List<Product> _productsList = [];
+class WishlistProvider extends ChangeNotifier {
+  final List<Product> _wishlistList = [];
 
-  List<Product> get productsList {
-    return _productsList;
+  List<Product> get wishlistList {
+    return _wishlistList;
   }
 
   int get count {
-    return _productsList.length;
+    return _wishlistList.length;
   }
 
   double get totalPrice {
     double total = 0;
-    for (var item in _productsList) {
+    for (var item in _wishlistList) {
       total += item.price * item.quentity;
     }
     return total;
   }
 
-  void addItem(
+  void addWishItem(
     String name,
     double price,
     int quentity,
@@ -37,27 +37,23 @@ class CartProvider extends ChangeNotifier {
         imagesUrl: imagesUrl,
         documentId: documentId,
         supplierId: supplierId);
-    _productsList.add(product);
-    notifyListeners();
-  }
-
-  void incrementQuentity(Product product) {
-    product.increaseQuentity();
-    notifyListeners();
-  }
-
-  void decrementQuentity(Product product) {
-    product.decreaseQuentity();
+    _wishlistList.add(product);
     notifyListeners();
   }
 
   void removeItem(Product product) {
-    _productsList.remove(product);
+    _wishlistList.remove(product);
     notifyListeners();
   }
 
-  void clearCart() {
-    _productsList.clear();
+  void clearWishlist() {
+    _wishlistList.clear();
+    notifyListeners();
+  }
+
+  void removeFromWishlist(String id) {
+    _wishlistList
+        .removeWhere((wishlistProduct) => wishlistProduct.documentId == id);
     notifyListeners();
   }
 }
