@@ -31,26 +31,26 @@ class _WishlistScreenState extends State<WishlistScreen> {
             title: const AppBarTitle(title: "Wishlist"),
             leading: AppBarBackButton(color: Colors.black),
             actions: [
-              // context.watch<WishlistProvider>().wishlistList.isNotEmpty
-              //     ? IconButton(
-              //         onPressed: () {
-              //           GeneralAlertDialog.showMyDialog(
-              //               context: context,
-              //               title: "Clear cart",
-              //               contet: "Are you sure you want to clear cart?",
-              //               tabNo: () {
-              //                 Navigator.pop(context);
-              //               },
-              //               tabYes: () {
-              //                 context.read<WishlistProvider>().clearWishlist();
-              //                 Navigator.pop(context);
-              //               });
-              //         },
-              //         icon: const Icon(
-              //           Icons.delete_forever,
-              //           color: Colors.black,
-              //         ))
-              //     : SizedBox()
+              context.watch<WishlistProvider>().wishlistList.isNotEmpty
+                  ? IconButton(
+                      onPressed: () {
+                        GeneralAlertDialog.showMyDialog(
+                            context: context,
+                            title: "Clear wishlist",
+                            contet: "Are you sure you want to clear wishlist?",
+                            tabNo: () {
+                              Navigator.pop(context);
+                            },
+                            tabYes: () {
+                              context.read<WishlistProvider>().clearWishlist();
+                              Navigator.pop(context);
+                            });
+                      },
+                      icon: const Icon(
+                        Icons.delete_forever,
+                        color: Colors.black,
+                      ))
+                  : SizedBox()
             ],
           ),
           body: context.watch<WishlistProvider>().wishlistList.isNotEmpty
