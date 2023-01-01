@@ -28,9 +28,11 @@ class _MenGalleryScreenState extends State<MenGalleryScreen> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: Image(
-              image: AssetImage("assets/svgs/loading-animation-blue.gif"),
+          return const Material(
+            child: Center(
+              child: Image(
+                image: AssetImage("assets/svgs/loading-animation-blue.gif"),
+              ),
             ),
           );
         }

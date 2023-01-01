@@ -293,7 +293,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ],
                 ),
                 BlueButton(
-                  lable: 'ADD TO CART',
+                  lable: context
+                              .read<CartProvider>()
+                              .productsList
+                              .firstWhereOrNull(
+                                (cartProduct) =>
+                                    cartProduct.documentId ==
+                                    product["productId"],
+                              ) !=
+                          null
+                      ? "Added to cart"
+                      : 'ADD TO CART',
                   color: Colors.lightBlueAccent,
                   width: .5,
                   onPressed: () {

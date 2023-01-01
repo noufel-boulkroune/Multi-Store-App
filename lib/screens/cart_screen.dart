@@ -9,6 +9,7 @@ import '../screens/customer_home_screen.dart';
 import '../widgets/appbar_widget.dart';
 
 import '../widgets/blue_button.dart';
+import 'minor_screen/place_order_screen.dart';
 
 class CartScreen extends StatefulWidget {
   final Widget? back;
@@ -68,7 +69,7 @@ class _CartScreenState extends State<CartScreen> {
                   builder: (_, cart, __) {
                     return Expanded(
                       child: Text(
-                        cart.totalPrice.toString(),
+                        cart.totalPrice.toStringAsFixed(2),
                         style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -77,11 +78,20 @@ class _CartScreenState extends State<CartScreen> {
                     );
                   },
                 ),
-                BlueButton(
-                  lable: 'CHECK OUT',
-                  onPressed: () {},
-                  width: .4,
+                MaterialButton(
+                  child: Text('CHECK OUT'),
+                  onPressed: context.watch<CartProvider>().totalPrice == 0
+                      ? null
+                      : () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PlaceOrderScreen(),
+                              ));
+                        },
                   color: Colors.lightBlueAccent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)),
                 )
               ],
             ),
