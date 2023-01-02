@@ -1,0 +1,232 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:multi_store_app/providers/cart_provider.dart';
+import 'package:multi_store_app/widgets/appbar_widget.dart';
+import 'package:multi_store_app/widgets/blue_button.dart';
+import 'package:provider/provider.dart';
+
+class PaymentScreen extends StatefulWidget {
+  const PaymentScreen({
+    super.key,
+  });
+
+  @override
+  State<PaymentScreen> createState() => _PaymentScreenState();
+}
+
+class _PaymentScreenState extends State<PaymentScreen> {
+  int selectedValue = 1;
+  CollectionReference customers =
+      FirebaseFirestore.instance.collection('customers');
+
+  @override
+  Widget build(BuildContext context) {
+    double totalPrice = context.watch<CartProvider>().totalPrice;
+    double totalPaid = totalPrice + 10;
+    return FutureBuilder<DocumentSnapshot>(
+        future: customers.doc(FirebaseAuth.instance.currentUser!.uid).get(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return const Text("Something went wrong");
+          }
+
+          if (snapshot.hasData && !snapshot.data!.exists) {
+            return const Text("Document does not exist");
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Material(
+              child: Center(child: CircularProgressIndicator()),
+            );
+          }
+
+          if (snapshot.connectionState == ConnectionState.done) {
+            Map<String, dynamic> customerData =
+                snapshot.data!.data() as Map<String, dynamic>;
+            return Material(
+              child: SafeArea(
+                child: Scaffold(
+                  appBar: AppBar(
+                    elevation: 0,
+                    backgroundColor: Colors.grey.shade200,
+                    leading: AppBarBackButton(color: Colors.black),
+                    title: const AppBarTitle(title: "Payment"),
+                  ),
+                  body: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 60),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 120,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 6),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        "Total",
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                      Text(
+                                        "${totalPaid.toStringAsFixed(2)} USD",
+                                        style: const TextStyle(fontSize: 20),
+                                      ),
+                                    ],
+                                  ),
+                                  const Divider(
+                                    color: Colors.grey,
+                                    thickness: 2,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        "Total Order",
+                                        style: TextStyle(
+                                            fontSize: 16, color: Colors.grey),
+                                      ),
+                                      Text(
+                                        "${totalPrice.toStringAsFixed(2)} USD",
+                                        style: const TextStyle(
+                                            fontSize: 16, color: Colors.grey),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: const [
+                                      Text(
+                                        "Shipping Coast",
+                                        style: TextStyle(
+                                            fontSize: 16, color: Colors.grey),
+                                      ),
+                                      Text(
+                                        "10.00 USD",
+                                        style: TextStyle(
+                                            fontSize: 16, color: Colors.grey),
+                                      ),
+                                    ],
+                                  )
+                                ]),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Expanded(
+                          child: Container(
+                              height: 90,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: Column(
+                                children: [
+                                  RadioListTile(
+                                    value: 1,
+                                    groupValue: selectedValue,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedValue = value!;
+                                      });
+                                    },
+                                    title: const Text("Cash On Delivery"),
+                                    subtitle: const Text("Pay Cash At Home"),
+                                  ),
+                                  RadioListTile(
+                                    value: 2,
+                                    groupValue: selectedValue,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedValue = value!;
+                                      });
+                                    },
+                                    title: const Text(
+                                        "Pay Via Visa / Master Card"),
+                                    subtitle: Row(
+                                      children: const [
+                                        Icon(
+                                          Icons.payment,
+                                          color: Colors.blueAccent,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 15),
+                                          child: Icon(
+                                            Icons.payment,
+                                            color: Colors.blueAccent,
+                                          ),
+                                        ),
+                                        Icon(
+                                          Icons.payment,
+                                          color: Colors.blueAccent,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  RadioListTile(
+                                    value: 3,
+                                    groupValue: selectedValue,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedValue = value!;
+                                      });
+                                    },
+                                    title: const Text("Pay Via Paypal"),
+                                    subtitle: Row(
+                                      children: const [
+                                        Icon(
+                                          Icons.payment,
+                                          color: Colors.blueAccent,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 15),
+                                          child: Icon(
+                                            Icons.payment,
+                                            color: Colors.blueAccent,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        ),
+                      ],
+                    ),
+                  ),
+                  bottomSheet: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: BlueButton(
+                        lable: "Confirm ${totalPrice.toStringAsFixed(2)} USD",
+                        onPressed: () {},
+                        width: double.infinity,
+                        color: Colors.lightBlueAccent),
+                  ),
+                ),
+              ),
+            );
+          }
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(
+                color: Colors.lightBlueAccent,
+              ),
+            ),
+          );
+        });
+  }
+}

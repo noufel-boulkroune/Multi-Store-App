@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_store_app/providers/cart_provider.dart';
+import 'package:multi_store_app/screens/minor_screen/payment_screen.dart';
 import 'package:multi_store_app/widgets/appbar_widget.dart';
 import 'package:multi_store_app/widgets/blue_button.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double totalPrice = context.watch<CartProvider>().totalPrice;
     return FutureBuilder<DocumentSnapshot>(
         future: customers.doc(FirebaseAuth.instance.currentUser!.uid).get(),
         builder:
@@ -68,21 +70,15 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  Text(
-                                    "Name: ${customerData["name"]}",
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    "Phone: ${customerData["phone"]}",
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    "Address: ${customerData["address"]}",
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                  Text("Name: ${customerData["name"]}",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis),
+                                  Text("Phone: ${customerData["phone"]}",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis),
+                                  Text("Address: ${customerData["address"]}",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis),
                                 ]),
                           ),
                         ),
@@ -197,8 +193,14 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                   bottomSheet: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: BlueButton(
-                        lable: "Confirm",
-                        onPressed: () {},
+                        lable: "Confirm ${totalPrice.toStringAsFixed(2)} USD",
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PaymentScreen(),
+                              ));
+                        },
                         width: double.infinity,
                         color: Colors.lightBlueAccent),
                   ),
