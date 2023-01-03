@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_store_app/widgets/appbar_widget.dart';
 
+import '../../models/customer_order_model.dart';
+
 class CustomerOrdersScreen extends StatelessWidget {
   CustomerOrdersScreen({super.key});
 
@@ -54,63 +56,15 @@ class CustomerOrdersScreen extends StatelessWidget {
           return ListView.builder(
               itemCount: order.length,
               itemBuilder: (context, index) => Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                        border:
-                            Border.all(width: 1, color: Colors.lightBlueAccent),
-                        borderRadius: BorderRadius.circular(15)),
-                    child: ExpansionTile(
-                      title: Container(
-                        constraints: BoxConstraints(
-                            maxHeight: 80, maxWidth: double.infinity),
-                        child: Row(
-                          children: [
-                            Container(
-                              constraints: const BoxConstraints(
-                                  maxHeight: 80, maxWidth: 80),
-                              child: Image.network(order[index]["orderImage"]),
-                            ),
-                            Flexible(
-                                child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    order[index]["productName"],
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey.shade600,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                          "\$ ${order[index]["orderPrice"].toStringAsFixed(2)}"),
-                                      Text(
-                                          "x ${order[index]["orderQuantity"].toString()}")
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ))
-                          ],
-                        ),
-                      ),
-                      subtitle: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("See more .."),
-                          Text(order[index]["deliveryStatus"])
-                        ],
-                      ),
-                    ),
-                  ));
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  decoration: BoxDecoration(
+                      border:
+                          Border.all(width: 1, color: Colors.lightBlueAccent),
+                      borderRadius: BorderRadius.circular(15)),
+                  child: CustomerOrderModel(
+                    order: order[index],
+                  )));
         },
       ),
     );
