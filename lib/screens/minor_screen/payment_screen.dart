@@ -219,7 +219,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   bottomSheet: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: transactin
-                        ? Center(
+                        ? const Center(
                             child: CircularProgressIndicator(),
                           )
                         : BlueButton(
@@ -241,103 +241,121 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                         children: [
                                           Text(
                                             "Pay At Home ${totalPaid.toStringAsFixed(2)} \$",
-                                            style: TextStyle(fontSize: 24),
+                                            style:
+                                                const TextStyle(fontSize: 24),
                                           ),
-                                          BlueButton(
-                                              lable:
-                                                  "Confirm ${totalPaid.toStringAsFixed(2)} \$",
-                                              onPressed: () async {
-                                                setState(() {
-                                                  transactin = true;
-                                                });
-                                                for (var item in context
-                                                    .read<CartProvider>()
-                                                    .productsList) {
-                                                  CollectionReference orderRef =
-                                                      FirebaseFirestore.instance
-                                                          .collection("orders");
-                                                  orderId = Uuid().v4();
-                                                  await orderRef
-                                                      .doc(orderId)
-                                                      .set({
-                                                    //customer info
-                                                    "customerId": customerData[
-                                                        "customerId"],
-                                                    "customerName":
-                                                        customerData["name"],
-                                                    "customerEmail":
-                                                        customerData["email"],
-                                                    "customerAddress":
-                                                        customerData["address"],
-                                                    "customerPhone":
-                                                        customerData["phone"],
-                                                    "customerProfileImage":
-                                                        customerData[
-                                                            "profileImage"],
-                                                    //supplier info
-                                                    "supplierId":
-                                                        item.supplierId,
-                                                    //produst info
-                                                    "productId":
-                                                        item.documentId,
-                                                    "order": orderId,
-                                                    "orderImage":
-                                                        item.imagesUrl.first,
-                                                    "orderQuantity":
-                                                        item.quentity,
-                                                    "orderPrice":
-                                                        item.quentity *
-                                                            item.price,
-
-                                                    //delivery info
-                                                    "deliveryStatus":
-                                                        "preparing",
-                                                    "deliveryDate": "",
-                                                    "orderDate": DateTime.now(),
-                                                    "paymentStatus":
-                                                        "cash on delivery",
-                                                    "orderReview": false,
-                                                  }).then((value) async {
-                                                    await FirebaseFirestore
-                                                        .instance
-                                                        .runTransaction(
-                                                            (transaction) async {
-                                                      DocumentReference
-                                                          documentReference =
+                                          transactin == 0
+                                              ? const Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                )
+                                              : BlueButton(
+                                                  lable:
+                                                      "Confirm ${totalPaid.toStringAsFixed(2)} \$",
+                                                  onPressed: () async {
+                                                    setState(() {
+                                                      transactin = true;
+                                                    });
+                                                    for (var item in context
+                                                        .read<CartProvider>()
+                                                        .productsList) {
+                                                      CollectionReference
+                                                          orderRef =
                                                           FirebaseFirestore
                                                               .instance
                                                               .collection(
-                                                                  "products")
-                                                              .doc(item
-                                                                  .documentId);
-                                                      DocumentSnapshot
-                                                          documentSnapshot =
-                                                          await transaction.get(
-                                                              documentReference);
-                                                      transaction.update(
-                                                          documentReference, {
-                                                        "inStock":
-                                                            documentSnapshot[
-                                                                    "inStock"] -
-                                                                item.quentity
+                                                                  "orders");
+                                                      orderId =
+                                                          const Uuid().v4();
+                                                      await orderRef
+                                                          .doc(orderId)
+                                                          .set({
+                                                        //customer info
+                                                        "customerId":
+                                                            customerData[
+                                                                "customerId"],
+                                                        "customerName":
+                                                            customerData[
+                                                                "name"],
+                                                        "customerEmail":
+                                                            customerData[
+                                                                "email"],
+                                                        "customerAddress":
+                                                            customerData[
+                                                                "address"],
+                                                        "customerPhone":
+                                                            customerData[
+                                                                "phone"],
+                                                        "customerProfileImage":
+                                                            customerData[
+                                                                "profileImage"],
+                                                        //supplier info
+                                                        "supplierId":
+                                                            item.supplierId,
+                                                        //produst info
+                                                        "productName":
+                                                            item.name,
+                                                        "productId":
+                                                            item.documentId,
+                                                        "order": orderId,
+                                                        "orderImage": item
+                                                            .imagesUrl.first,
+                                                        "orderQuantity":
+                                                            item.quentity,
+                                                        "orderPrice":
+                                                            item.quentity *
+                                                                item.price,
+
+                                                        //delivery info
+                                                        "deliveryStatus":
+                                                            "preparing",
+                                                        "deliveryDate": "",
+                                                        "orderDate":
+                                                            DateTime.now(),
+                                                        "paymentStatus":
+                                                            "cash on delivery",
+                                                        "orderReview": false,
+                                                      }).then((value) async {
+                                                        await FirebaseFirestore
+                                                            .instance
+                                                            .runTransaction(
+                                                                (transaction) async {
+                                                          DocumentReference
+                                                              documentReference =
+                                                              FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      "products")
+                                                                  .doc(item
+                                                                      .documentId);
+                                                          DocumentSnapshot
+                                                              documentSnapshot =
+                                                              await transaction.get(
+                                                                  documentReference);
+                                                          transaction.update(
+                                                              documentReference,
+                                                              {
+                                                                "inStock": documentSnapshot[
+                                                                        "inStock"] -
+                                                                    item.quentity
+                                                              });
+                                                        });
                                                       });
+                                                    }
+                                                    setState(() {
+                                                      transactin = false;
                                                     });
-                                                  });
-                                                }
-                                                setState(() {
-                                                  transactin = false;
-                                                });
-                                                //clear the cart product list
-                                                context
-                                                    .read<CartProvider>()
-                                                    .clearCart();
-                                                Navigator.pushNamed(
-                                                    context,
-                                                    CustomerHomeScreen
-                                                        .routeName);
-                                              },
-                                              width: 1,
-                                              color: Colors.lightBlueAccent)
+                                                    //clear the cart product list
+                                                    context
+                                                        .read<CartProvider>()
+                                                        .clearCart();
+                                                    Navigator.pushNamed(
+                                                        context,
+                                                        CustomerHomeScreen
+                                                            .routeName);
+                                                  },
+                                                  width: 1,
+                                                  color: Colors.lightBlueAccent)
                                         ],
                                       ),
                                     ),
