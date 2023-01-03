@@ -29,6 +29,7 @@ class _WomenGalleryScreenState extends State<WomenGalleryScreen> {
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Material(
+            color: Colors.white,
             child: Center(
               child: Image(
                 image: AssetImage("assets/svgs/loading-animation-blue.gif"),

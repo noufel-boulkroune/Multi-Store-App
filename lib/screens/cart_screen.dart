@@ -86,7 +86,7 @@ class _CartScreenState extends State<CartScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => PlaceOrderScreen(),
+                                builder: (context) => const PlaceOrderScreen(),
                               ));
                         },
                   color: Colors.lightBlueAccent,

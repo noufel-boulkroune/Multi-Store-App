@@ -179,14 +179,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   )),
                       ],
                     ),
-                    Text(
-                      product["inStock"].toString() +
-                          " pieces available in stock",
-                      style: const TextStyle(
-                        color: Colors.blueGrey,
-                        fontSize: 16,
-                      ),
-                    ),
+                    product["inStock"] == 0
+                        ? Text(
+                            "This item is out of stock",
+                            style: const TextStyle(
+                              color: Colors.blueGrey,
+                              fontSize: 16,
+                            ),
+                          )
+                        : Text(
+                            product["inStock"].toString() +
+                                " pieces available in stock",
+                            style: const TextStyle(
+                              color: Colors.blueGrey,
+                              fontSize: 16,
+                            ),
+                          ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -307,22 +315,30 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   color: Colors.lightBlueAccent,
                   width: .5,
                   onPressed: () {
-                    context.read<CartProvider>().productsList.firstWhereOrNull(
-                                  (cartProduct) =>
-                                      cartProduct.documentId ==
-                                      product["productId"],
-                                ) !=
-                            null
-                        ? SnackBarHundler.showSnackBar(
-                            scafoldKey, "This item already in your cart")
-                        : context.read<CartProvider>().addItem(
-                            product["productName"],
-                            product["price"],
-                            1,
-                            product["inStock"],
-                            product["productImages"],
-                            product["productId"],
-                            product["supplierId"]);
+                    if (product["inStock"] == 0) {
+                      SnackBarHundler.showSnackBar(
+                          scafoldKey, "This item is out of stock");
+                    } else if (context
+                            .read<CartProvider>()
+                            .productsList
+                            .firstWhereOrNull(
+                              (cartProduct) =>
+                                  cartProduct.documentId ==
+                                  product["productId"],
+                            ) !=
+                        null) {
+                      SnackBarHundler.showSnackBar(
+                          scafoldKey, "This item already in your cart");
+                    } else {
+                      context.read<CartProvider>().addItem(
+                          product["productName"],
+                          product["price"],
+                          1,
+                          product["inStock"],
+                          product["productImages"],
+                          product["productId"],
+                          product["supplierId"]);
+                    }
                   },
                 ),
               ],
