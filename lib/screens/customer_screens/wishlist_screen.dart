@@ -160,16 +160,16 @@ class WishlistItems extends StatelessWidget {
                                           },
                                           icon: Icon(Icons.delete_forever)),
                                       context
-                                                  .watch<CartProvider>()
-                                                  .productsList
-                                                  .firstWhereOrNull(
-                                                    (cartProduct) =>
-                                                        cartProduct
-                                                            .documentId ==
-                                                        wishlistProduct
-                                                            .documentId,
-                                                  ) !=
-                                              null
+                                                      .watch<CartProvider>()
+                                                      .productsList
+                                                      .firstWhereOrNull(
+                                                          (cartProduct) =>
+                                                              cartProduct
+                                                                  .documentId ==
+                                                              wishlistProduct
+                                                                  .documentId) !=
+                                                  null ||
+                                              wishlistProduct.inStock == 0
                                           ? SizedBox()
                                           : SizedBox(
                                               child: IconButton(
