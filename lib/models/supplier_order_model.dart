@@ -134,7 +134,15 @@ class SupplierOrderModel extends StatelessWidget {
                                       minTime: DateTime.now(),
                                       maxTime: DateTime.now()
                                           .add(const Duration(days: 365)),
-                                      onConfirm: (date) async {},
+                                      onConfirm: (date) async {
+                                        await FirebaseFirestore.instance
+                                            .collection("orders")
+                                            .doc(order["orderId"])
+                                            .update({
+                                          "deliveryStatus": "shipping",
+                                          order["orderDate"]: date
+                                        });
+                                      },
                                     );
                                   },
                                   child: Text("Shipping ?"))
