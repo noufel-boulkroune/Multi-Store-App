@@ -105,12 +105,16 @@ class SupplierOrderModel extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    const Text(
-                      "Order Date: ",
+                    Text(
+                      order["deliveryStatus"] == "preparing"
+                          ? "Order Date: "
+                          : "Shipping date: ",
                       style: TextStyle(fontSize: 15),
                     ),
                     Text(
-                      "${DateFormat.yMMMd().format(order["orderDate"].toDate())}",
+                      DateFormat("yyyy-MM-dd")
+                          .format(order["orderDate"].toDate())
+                          .toString(),
                       style: const TextStyle(fontSize: 15, color: Colors.green),
                     ),
                   ],
@@ -134,20 +138,30 @@ class SupplierOrderModel extends StatelessWidget {
                                       minTime: DateTime.now(),
                                       maxTime: DateTime.now()
                                           .add(const Duration(days: 365)),
+                                      //update order delivery status and order date in firebase
                                       onConfirm: (date) async {
                                         await FirebaseFirestore.instance
                                             .collection("orders")
-                                            .doc(order["orderId"])
+                                            .doc(order["order"])
                                             .update({
+                                          "deliveryDate":
+                                              date.toIso8601String(),
                                           "deliveryStatus": "shipping",
-                                          order["orderDate"]: date
                                         });
                                       },
                                     );
                                   },
-                                  child: Text("Shipping ?"))
+                                  child: const Text("Shipping ?"))
                               : TextButton(
-                                  onPressed: () {}, child: Text("Delivered ?"))
+                                  onPressed: () async {
+                                    FirebaseFirestore.instance
+                                        .collection("orders")
+                                        .doc(order["order"])
+                                        .update({
+                                      "deliveryStatus": "delivered",
+                                    });
+                                  },
+                                  child: Text("Delivered ?"))
                         ],
                       ),
               ],
