@@ -33,7 +33,7 @@ List<Widget> pages = [
   const SupplierOrdersScreen(),
   const EditBusinessScreen(),
   ManageProductsScreen(),
-  const BalanceScreen(),
+  BalanceScreen(),
   StaticsScreen()
 ];
 
