@@ -52,30 +52,35 @@ class StaticsScreen extends StatelessWidget {
               ),
             );
           }
-          num itemCount = 0;
+          double itemCount = 0;
           for (var item in data) {
             itemCount += item["orderQuantity"];
           }
-
+          double count = 0;
           double totalPrice = 0;
           for (var item in data) {
             totalPrice += item["orderQuantity"] * item["orderPrice"];
+            count += 1;
           }
+
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 StaticsModel(
                   lable: 'Sold out',
-                  value: data.length,
+                  value: count,
+                  decimal: 0,
                 ),
                 StaticsModel(
                   lable: 'Item count',
                   value: itemCount,
+                  decimal: 0,
                 ),
                 StaticsModel(
                   lable: 'Total balance',
-                  value: totalPrice.toStringAsFixed(2),
+                  value: totalPrice,
+                  decimal: 2,
                 ),
                 SizedBox()
               ],
@@ -89,11 +94,13 @@ class StaticsScreen extends StatelessWidget {
 
 class StaticsModel extends StatelessWidget {
   final String lable;
-  final dynamic value;
+  final double value;
+  final int decimal;
   StaticsModel({
     Key? key,
     required this.lable,
     required this.value,
+    required this.decimal,
   }) : super(key: key);
 
   @override
@@ -118,25 +125,68 @@ class StaticsModel extends StatelessWidget {
           ),
         ),
         Container(
-          height: 90,
-          width: MediaQuery.of(context).size.width * .55,
-          decoration: BoxDecoration(
-              color: Colors.blueGrey.shade100,
-              borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(25),
-                  bottomRight: Radius.circular(25))),
-          child: Center(
-            child: Text(
-              value.toString(),
-              style: const TextStyle(
-                  color: Colors.pink,
-                  fontSize: 40,
-                  letterSpacing: 2,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-        )
+            height: 90,
+            width: MediaQuery.of(context).size.width * .55,
+            decoration: BoxDecoration(
+                color: Colors.blueGrey.shade100,
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25))),
+            child: AnimatedCounter(
+              value: value.round(),
+              decimal: decimal,
+            ))
       ],
+    );
+  }
+}
+
+class AnimatedCounter extends StatefulWidget {
+  final int value;
+  final int decimal;
+  const AnimatedCounter(
+      {super.key, required this.value, required this.decimal});
+
+  @override
+  State<AnimatedCounter> createState() => _AnimatedCounterState();
+}
+
+class _AnimatedCounterState extends State<AnimatedCounter>
+    with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation _animation;
+
+  @override
+  void initState() {
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
+    _animation = _controller;
+    setState(() {
+      _animation = Tween(begin: _animation.value, end: widget.value)
+          .animate(_controller);
+    });
+    _controller.forward();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Center(
+          child: Text(
+            widget.decimal == 2
+                ? "${_animation.value.toStringAsFixed(widget.decimal)} \$"
+                : _animation.value.toStringAsFixed(widget.decimal),
+            style: const TextStyle(
+                color: Colors.pink,
+                fontSize: 40,
+                letterSpacing: 2,
+                fontWeight: FontWeight.bold),
+          ),
+        );
+      },
     );
   }
 }
