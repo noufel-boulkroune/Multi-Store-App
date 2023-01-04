@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CustomerOrderModel extends StatelessWidget {
   final dynamic order;
@@ -105,7 +106,7 @@ class CustomerOrderModel extends StatelessWidget {
                 ),
                 order["deliveryStatus"] == "shipping"
                     ? Text(
-                        "Estimated Delivery Date: ${order["deliveryDate"]}",
+                        "Estimated Delivery Date: ${DateFormat("yyyy-MM-dd").format(order["deliveryDate"].toDate())}",
                         style: const TextStyle(fontSize: 15),
                       )
                     : const Text(""),

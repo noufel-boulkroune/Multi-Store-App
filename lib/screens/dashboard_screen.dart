@@ -32,9 +32,9 @@ List<Widget> pages = [
   VisitStoreScreen(supplierId: FirebaseAuth.instance.currentUser!.uid),
   const SupplierOrdersScreen(),
   const EditBusinessScreen(),
-  const ManageProductsScreen(),
+  ManageProductsScreen(),
   const BalanceScreen(),
-  const StaticsScreen()
+  StaticsScreen()
 ];
 
 class DashboardScreen extends StatelessWidget {
