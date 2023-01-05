@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 class CustomerOrderModel extends StatelessWidget {
   final dynamic order;
-  CustomerOrderModel({super.key, required this.order});
+  const CustomerOrderModel({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {

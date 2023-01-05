@@ -218,7 +218,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                   bottomSheet: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: transactin
+                    child: transactin == true
                         ? const Center(
                             child: CircularProgressIndicator(),
                           )
@@ -244,7 +244,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                             style:
                                                 const TextStyle(fontSize: 24),
                                           ),
-                                          transactin == 0
+                                          transactin == true
                                               ? const Center(
                                                   child:
                                                       CircularProgressIndicator(),
@@ -346,13 +346,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                                       transactin = false;
                                                     });
                                                     //clear the cart product list
-                                                    context
-                                                        .read<CartProvider>()
-                                                        .clearCart();
-                                                    Navigator.pushNamed(
-                                                        context,
-                                                        CustomerHomeScreen
-                                                            .routeName);
+                                                    Future.delayed(
+                                                            const Duration(
+                                                                microseconds:
+                                                                    10))
+                                                        .whenComplete(() => context
+                                                            .read<
+                                                                CartProvider>()
+                                                            .clearCart());
+                                                    Future.delayed(
+                                                            const Duration(
+                                                                microseconds:
+                                                                    10))
+                                                        .whenComplete(() =>
+                                                            Navigator.pushNamed(
+                                                                context,
+                                                                CustomerHomeScreen
+                                                                    .routeName));
                                                   },
                                                   width: 1,
                                                   color: Colors.lightBlueAccent)
@@ -366,7 +376,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               } else if (paymentMethod == PaymentMethods.visa) {
                               } else if (paymentMethod ==
                                   PaymentMethods.paypal) {
-                                print("paypal");
+                                //   print("paypal");
                               }
                             },
                             width: double.infinity,

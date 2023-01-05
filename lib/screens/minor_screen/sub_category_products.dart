@@ -16,7 +16,7 @@ class SubCategoryProducts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
+    final Stream<QuerySnapshot> productsStream = FirebaseFirestore.instance
         .collection('products')
         .where("mainCategory", isEqualTo: mainCategoryName)
         .where("subCaategory", isEqualTo: subCategoryName)
@@ -31,7 +31,7 @@ class SubCategoryProducts extends StatelessWidget {
             ),
             title: AppBarTitle(title: subCategoryName)),
         body: StreamBuilder<QuerySnapshot>(
-          stream: _productsStream,
+          stream: productsStream,
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {

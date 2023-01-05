@@ -61,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     return FlexibleSpaceBar(
                       title: AnimatedOpacity(
                         opacity: constraints.biggest.height <= 120 ? 1 : 0,
-                        duration: const Duration(milliseconds: 300),
+                        duration: const Duration(microseconds: 300),
                         child: const Text(
                           "Account",
                           style: TextStyle(color: Colors.black),
@@ -297,9 +297,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       },
                                       tabYes: () async {
                                         await FirebaseAuth.instance.signOut();
-                                        Navigator.of(context).pop();
-                                        Navigator.pushReplacementNamed(
-                                            context, "/");
+                                        await Future.delayed(const Duration(
+                                                microseconds: 10))
+                                            .whenComplete(() =>
+                                                Navigator.of(context).pop());
+                                        await Future.delayed(const Duration(
+                                                microseconds: 10))
+                                            .whenComplete(() =>
+                                                Navigator.pushReplacementNamed(
+                                                    context, "/"));
                                       },
                                     );
                                   },

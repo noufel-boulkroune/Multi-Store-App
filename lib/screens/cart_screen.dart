@@ -8,7 +8,6 @@ import '../providers/wichlist_provider.dart';
 import '../screens/customer_home_screen.dart';
 import '../widgets/appbar_widget.dart';
 
-import '../widgets/blue_button.dart';
 import 'minor_screen/place_order_screen.dart';
 
 class CartScreen extends StatefulWidget {
@@ -51,7 +50,7 @@ class _CartScreenState extends State<CartScreen> {
                         Icons.delete_forever,
                         color: Colors.black,
                       ))
-                  : SizedBox()
+                  : const SizedBox()
             ],
           ),
           body: context.watch<CartProvider>().productsList.isNotEmpty
@@ -79,7 +78,6 @@ class _CartScreenState extends State<CartScreen> {
                   },
                 ),
                 MaterialButton(
-                  child: Text('CHECK OUT'),
                   onPressed: context.watch<CartProvider>().totalPrice == 0
                       ? null
                       : () {
@@ -92,6 +90,7 @@ class _CartScreenState extends State<CartScreen> {
                   color: Colors.lightBlueAccent,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25)),
+                  child: const Text('CHECK OUT'),
                 )
               ],
             ),
@@ -190,7 +189,7 @@ class CartItems extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    product.price.toStringAsFixed(2) + " \$",
+                                    "${product.price.toStringAsFixed(2)} \$",
                                     style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,

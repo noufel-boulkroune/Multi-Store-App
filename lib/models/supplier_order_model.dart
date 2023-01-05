@@ -5,7 +5,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class SupplierOrderModel extends StatelessWidget {
   final dynamic order;
-  SupplierOrderModel({super.key, required this.order});
+  const SupplierOrderModel({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +109,7 @@ class SupplierOrderModel extends StatelessWidget {
                       order["deliveryStatus"] == "preparing"
                           ? "Order Date: "
                           : "Shipping date: ",
-                      style: TextStyle(fontSize: 15),
+                      style: const TextStyle(fontSize: 15),
                     ),
                     Text(
                       DateFormat("yyyy-MM-dd")
@@ -161,7 +161,7 @@ class SupplierOrderModel extends StatelessWidget {
                                       "deliveryStatus": "delivered",
                                     });
                                   },
-                                  child: Text("Delivered ?"))
+                                  child: const Text("Delivered ?"))
                         ],
                       ),
               ],

@@ -112,7 +112,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           onTap: () {
             _pageController.animateToPage(
               index,
-              duration: const Duration(milliseconds: 300),
+              duration: const Duration(microseconds: 300),
               curve: Curves.fastOutSlowIn,
             );
           },

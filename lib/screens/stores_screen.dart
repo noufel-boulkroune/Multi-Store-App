@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:multi_store_app/widgets/appbar_widget.dart';
-import 'package:staggered_grid_view_flutter/rendering/sliver_staggered_grid.dart';
 
 import 'minor_screen/visit_store_screen.dart';
 

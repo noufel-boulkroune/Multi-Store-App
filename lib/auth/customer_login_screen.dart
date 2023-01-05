@@ -55,8 +55,9 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
             processing = false;
           });
         });
-
-        Navigator.pushReplacementNamed(context, CustomerHomeScreen.routeName);
+        await Future.delayed(const Duration(microseconds: 10)).whenComplete(
+            () => Navigator.pushReplacementNamed(
+                context, CustomerHomeScreen.routeName));
       } on FirebaseAuthException catch (error) {
         if (error.code == 'user-not-found') {
           SnackBarHundler.showSnackBar(

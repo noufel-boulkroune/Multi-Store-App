@@ -276,9 +276,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                   "customerId": _userid
                                 });
                               });
-
-                              Navigator.pushReplacementNamed(
-                                  context, CustomerHomeScreen.routeName);
+                              await Future.delayed(
+                                      const Duration(microseconds: 10))
+                                  .whenComplete(() =>
+                                      Navigator.pushReplacementNamed(context,
+                                          CustomerHomeScreen.routeName));
                             },
                           ),
                   ],

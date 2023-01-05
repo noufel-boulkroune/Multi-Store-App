@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_store_app/widgets/appbar_widget.dart';
 
@@ -82,7 +81,7 @@ class StaticsScreen extends StatelessWidget {
                   value: totalPrice,
                   decimal: 2,
                 ),
-                SizedBox()
+                const SizedBox()
               ],
             ),
           );
@@ -96,7 +95,7 @@ class StaticsModel extends StatelessWidget {
   final String lable;
   final double value;
   final int decimal;
-  StaticsModel({
+  const StaticsModel({
     Key? key,
     required this.lable,
     required this.value,
@@ -159,7 +158,7 @@ class _AnimatedCounterState extends State<AnimatedCounter>
   @override
   void initState() {
     _controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 2));
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
     _animation = _controller;
     setState(() {
       _animation = Tween(begin: _animation.value, end: widget.value)

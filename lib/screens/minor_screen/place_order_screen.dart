@@ -35,7 +35,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
             return const Text("Document does not exist");
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Material(
+            return const Material(
               child: Center(child: CircularProgressIndicator()),
             );
           }
@@ -198,7 +198,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => PaymentScreen(),
+                                builder: (context) => const PaymentScreen(),
                               ));
                         },
                         width: double.infinity,
