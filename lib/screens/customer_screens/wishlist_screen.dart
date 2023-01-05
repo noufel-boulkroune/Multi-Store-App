@@ -5,11 +5,7 @@ import 'package:multi_store_app/widgets/alert_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
 
-import '../../widgets/snackbar.dart';
-import '/screens/customer_home_screen.dart';
 import '/widgets/appbar_widget.dart';
-
-import '/widgets/blue_button.dart';
 
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({super.key});
@@ -50,7 +46,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                         Icons.delete_forever,
                         color: Colors.black,
                       ))
-                  : SizedBox()
+                  : const SizedBox()
             ],
           ),
           body: context.watch<WishlistProvider>().wishlistList.isNotEmpty
@@ -131,8 +127,7 @@ class WishlistItems extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    wishlistProduct.price.toStringAsFixed(2) +
-                                        " \$",
+                                    "${wishlistProduct.price.toStringAsFixed(2)} \$",
                                     style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
@@ -158,7 +153,8 @@ class WishlistItems extends StatelessWidget {
                                                   Navigator.pop(context);
                                                 });
                                           },
-                                          icon: Icon(Icons.delete_forever)),
+                                          icon:
+                                              const Icon(Icons.delete_forever)),
                                       context
                                                       .watch<CartProvider>()
                                                       .productsList
@@ -170,7 +166,7 @@ class WishlistItems extends StatelessWidget {
                                                                   .documentId) !=
                                                   null ||
                                               wishlistProduct.inStock == 0
-                                          ? SizedBox()
+                                          ? const SizedBox()
                                           : SizedBox(
                                               child: IconButton(
                                                   onPressed: () {
@@ -197,7 +193,7 @@ class WishlistItems extends StatelessWidget {
                                                             wishlistProduct
                                                                 .documentId);
                                                   },
-                                                  icon: Icon(
+                                                  icon: const Icon(
                                                       Icons.add_shopping_cart)),
                                             ),
                                     ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../auth/customer_signup_screen.dart';
 import '../screens/supplier_home_screen.dart';
 import '../widgets/auth_widgets.dart';
 import '../widgets/snackbar.dart';
@@ -53,8 +52,9 @@ class _SupplierLoginScreenState extends State<SupplierLoginScreen> {
             processing = false;
           });
         });
-
-        Navigator.pushReplacementNamed(context, SupplierHomeScreen.routeName);
+        await Future.delayed(const Duration(microseconds: 10)).whenComplete(
+            () => Navigator.pushReplacementNamed(
+                context, SupplierHomeScreen.routeName));
       } on FirebaseAuthException catch (error) {
         if (error.code == 'user-not-found') {
           SnackBarHundler.showSnackBar(

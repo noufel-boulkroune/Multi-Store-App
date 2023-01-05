@@ -81,7 +81,7 @@ class _SupplierHomeScreenState extends State<SupplierHomeScreen> {
                     animationType: BadgeAnimationType.slide,
                     badgeColor: Colors.lightBlueAccent,
                     badgeContent: Text(order.length.toString()),
-                    child: Icon(Icons.dashboard)),
+                    child: const Icon(Icons.dashboard)),
                 label: "Dashboard",
               ),
               const BottomNavigationBarItem(

@@ -26,7 +26,7 @@ class _SupplierSignupScreenState extends State<SupplierSignupScreen> {
   late String storeName, email, password, storeLogo, _supplierid;
   bool processing = false;
   XFile? _imageFile;
-  dynamic _pickedImageError;
+  //dynamic _pickedImageError;
 
   CollectionReference suppliers =
       FirebaseFirestore.instance.collection("suppliers");
@@ -56,9 +56,9 @@ class _SupplierSignupScreenState extends State<SupplierSignupScreen> {
       });
     } catch (error) {
       setState(() {
-        _pickedImageError = error;
+        //   _pickedImageError = error;
       });
-      print(_pickedImageError);
+      //  print(_pickedImageError);
     }
   }
 
@@ -75,9 +75,9 @@ class _SupplierSignupScreenState extends State<SupplierSignupScreen> {
       });
     } catch (error) {
       setState(() {
-        _pickedImageError = error;
+        //  _pickedImageError = error;
       });
-      print(_pickedImageError);
+      // print(_pickedImageError);
     }
   }
 
@@ -124,8 +124,9 @@ class _SupplierSignupScreenState extends State<SupplierSignupScreen> {
                 processing = false;
               });
             });
-
-            Navigator.pushNamed(context, SupplierLoginScreen.routeName);
+            await Future.delayed(const Duration(microseconds: 10)).whenComplete(
+                () => Navigator.pushNamed(
+                    context, SupplierLoginScreen.routeName));
           });
         } on FirebaseAuthException catch (error) {
           if (error.code == 'weak-password') {

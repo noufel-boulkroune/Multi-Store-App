@@ -27,7 +27,7 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
   late String name, email, password, profileImage, _userid;
   bool processing = false;
   XFile? _imageFile;
-  dynamic _pickedImageError;
+  dynamic pickedImageError;
 
   CollectionReference customers =
       FirebaseFirestore.instance.collection("customers");
@@ -57,9 +57,9 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
       });
     } catch (error) {
       setState(() {
-        _pickedImageError = error;
+        pickedImageError = error;
       });
-      print(_pickedImageError);
+      //  print(pickedImageError);
     }
   }
 
@@ -76,9 +76,9 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
       });
     } catch (error) {
       setState(() {
-        _pickedImageError = error;
+        pickedImageError = error;
       });
-      print(_pickedImageError);
+      // print(pickedImageError);
     }
   }
 
@@ -124,7 +124,9 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
                 processing = false;
               });
             });
-            Navigator.pushNamed(context, CustomerLoginScreen.routeName);
+            await Future.delayed(const Duration(microseconds: 10)).whenComplete(
+                () => Navigator.pushNamed(
+                    context, CustomerLoginScreen.routeName));
           });
         } on FirebaseAuthException catch (error) {
           if (error.code == 'weak-password') {

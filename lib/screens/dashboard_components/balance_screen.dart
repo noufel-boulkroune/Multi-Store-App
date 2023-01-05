@@ -52,11 +52,11 @@ class BalanceScreen extends StatelessWidget {
               ),
             );
           }
-          double count = 0;
+          //  double count = 0;
           double totalPrice = 0;
           for (var item in data) {
             totalPrice += item["orderQuantity"] * item["orderPrice"];
-            count += 1;
+            //  count += 1;
           }
 
           return Center(
@@ -101,7 +101,7 @@ class StaticsModel extends StatelessWidget {
   final String lable;
   final double value;
   final int decimal;
-  StaticsModel({
+  const StaticsModel({
     Key? key,
     required this.lable,
     required this.value,
@@ -164,7 +164,7 @@ class _AnimatedCounterState extends State<AnimatedCounter>
   @override
   void initState() {
     _controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 2));
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
     _animation = _controller;
     setState(() {
       _animation = Tween(begin: _animation.value, end: widget.value)

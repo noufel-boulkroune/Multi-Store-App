@@ -20,7 +20,7 @@ import 'full_screen_view.dart';
 class ProductDetailScreen extends StatefulWidget {
   static const routeName = "product_detail_screen";
   final dynamic product;
-  ProductDetailScreen({super.key, required this.product});
+  const ProductDetailScreen({super.key, required this.product});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -33,7 +33,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final product = widget.product;
-    final Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
+    final Stream<QuerySnapshot> productsStream = FirebaseFirestore.instance
         .collection('products')
         .where("mainCategory", isEqualTo: product["mainCategory"])
         .snapshots();
@@ -152,7 +152,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             product["discount"] != 0
@@ -166,7 +166,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       fontWeight: FontWeight.w600,
                                     ),
                                   )
-                                : Text(""),
+                                : const Text(""),
                           ],
                         ),
                         IconButton(
@@ -254,7 +254,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                     SizedBox(
                       child: StreamBuilder<QuerySnapshot>(
-                        stream: _productsStream,
+                        stream: productsStream,
                         builder: (BuildContext context,
                             AsyncSnapshot<QuerySnapshot> snapshot) {
                           if (snapshot.hasError) {

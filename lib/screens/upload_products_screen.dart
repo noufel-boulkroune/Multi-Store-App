@@ -38,11 +38,11 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
 
   List<XFile>? _imagesFileList;
   List<String> _imagesUrlList = [];
-  dynamic _pickedImageError;
+  // dynamic _pickedImageError;
 
   bool processing = false;
 
-  var uuid = Uuid();
+  var uuid = const Uuid();
 
   @override
   void initState() {
@@ -65,9 +65,9 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
       });
     } catch (error) {
       setState(() {
-        _pickedImageError = error;
+        // _pickedImageError = error;
       });
-      print(_pickedImageError);
+      // print(_pickedImageError);
     }
   }
 
@@ -175,7 +175,7 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
           }
           uploadData();
         } catch (error) {
-          print(error);
+          //  print(error);
         }
       } else {
         SnackBarHundler.showSnackBar(_scafoldKey, "pleas pick images first");
@@ -340,7 +340,7 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
+                        SizedBox(
                           width: size.width * .4,
                           child: TextFormField(
                             validator: (value) {
@@ -361,7 +361,7 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
                             onSaved: (value) => price = double.parse(value!),
                           ),
                         ),
-                        Container(
+                        SizedBox(
                           width: size.width * .4,
                           child: TextFormField(
                             // maxLength: 2,
@@ -373,6 +373,7 @@ class _UploadProductsScreenState extends State<UploadProductsScreen> {
                               } else if (value.length > 2) {
                                 return "invalid discount. max 2 numbers ";
                               }
+                              return null;
                             },
                             keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true),

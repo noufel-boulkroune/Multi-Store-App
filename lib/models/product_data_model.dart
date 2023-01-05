@@ -1,6 +1,5 @@
-import 'dart:ui';
+// import 'dart:ui';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,8 +7,6 @@ import 'package:provider/provider.dart';
 import '../providers/wichlist_provider.dart';
 import '../screens/minor_screen/product_detail_screen.dart';
 import 'package:collection/collection.dart';
-
-import '../widgets/snackbar.dart';
 
 class ProductDataModel extends StatelessWidget {
   final dynamic data;
@@ -105,7 +102,7 @@ class ProductDataModel extends StatelessWidget {
                                 fontWeight: FontWeight.w600,
                               ),
                             )
-                          : Text(""),
+                          : const Text(""),
                       data["supplierId"] ==
                               FirebaseAuth.instance.currentUser!.uid
                           ? IconButton(
@@ -170,7 +167,7 @@ class ProductDataModel extends StatelessWidget {
             ),
           ),
           data["discount"] == 0
-              ? SizedBox()
+              ? const SizedBox()
               : Positioned(
                   top: 30,
                   child: Container(
@@ -185,7 +182,7 @@ class ProductDataModel extends StatelessWidget {
                       child: Text(
                         "Save ${data["discount"]} %",
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ),
                   ),

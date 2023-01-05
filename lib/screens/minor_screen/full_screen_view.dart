@@ -38,7 +38,7 @@ class _FullScreenViewState extends State<FullScreenView> {
               letterSpacing: 4,
             ),
           )),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           SizedBox(
@@ -71,7 +71,7 @@ class _FullScreenViewState extends State<FullScreenView> {
             // width: size.width * .3,
             child: ListImagesView(imagesList),
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
         ],
@@ -79,6 +79,7 @@ class _FullScreenViewState extends State<FullScreenView> {
     );
   }
 
+  // ignore: non_constant_identifier_names
   Widget ListImagesView(List imagesList) {
     return ListView.builder(
       scrollDirection: Axis.horizontal,
