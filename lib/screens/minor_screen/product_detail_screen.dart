@@ -123,14 +123,50 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             const SizedBox(
                               width: 10,
                             ),
-                            Text(
-                              product["price"].toString(),
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                              ),
+                            Row(
+                              children: [
+                                // Text(
+                                //   "\$ ",
+                                //   style: TextStyle(
+                                //     color: Colors.red.shade600,
+                                //     fontSize: 20,
+                                //     fontWeight: FontWeight.w600,
+                                //   ),
+                                // ),
+                                product["discount"] != 0
+                                    ? Text(product["price"].toStringAsFixed(2),
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 16,
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                          fontWeight: FontWeight.w600,
+                                        ))
+                                    : Text(
+                                        product["price"].toStringAsFixed(2),
+                                        style: TextStyle(
+                                          color: Colors.red.shade600,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                              ],
                             ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            product["discount"] != 0
+                                ? Text(
+                                    ((1 - (product["discount"] / 100)) *
+                                            product["price"])
+                                        .toStringAsFixed(2),
+                                    style: TextStyle(
+                                      color: Colors.red.shade600,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  )
+                                : Text(""),
                           ],
                         ),
                         IconButton(
@@ -151,7 +187,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       .read<WishlistProvider>()
                                       .addWishItem(
                                           product["productName"],
-                                          product["price"],
+                                          product["discount"] != 0
+                                              ? ((1 -
+                                                      (product["discount"] /
+                                                          100)) *
+                                                  product["price"])
+                                              : product["price"],
                                           1,
                                           product["inStock"],
                                           product["productImages"],
@@ -180,16 +221,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ],
                     ),
                     product["inStock"] == 0
-                        ? Text(
+                        ? const Text(
                             "This item is out of stock",
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.blueGrey,
                               fontSize: 16,
                             ),
                           )
                         : Text(
-                            product["inStock"].toString() +
-                                " pieces available in stock",
+                            "${product["inStock"]} pieces available in stock",
                             style: const TextStyle(
                               color: Colors.blueGrey,
                               fontSize: 16,
@@ -332,7 +372,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     } else {
                       context.read<CartProvider>().addItem(
                           product["productName"],
-                          product["price"],
+                          product["discount"] != 0
+                              ? ((1 - (product["discount"] / 100)) *
+                                  product["price"])
+                              : product["price"],
                           1,
                           product["inStock"],
                           product["productImages"],
