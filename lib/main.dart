@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:multi_store_app/providers/cart_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,10 +11,17 @@ import '../screens/welcome_screen.dart';
 import 'auth/customer_login_screen.dart';
 import 'auth/supplier_login_screen.dart';
 import 'auth/supplier_signup_screen.dart';
+import 'constante/stripe_keys.dart';
 import 'providers/wichlist_provider.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 void main() async {
+  await dotenv.load();
   WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey = stripePublishableKey;
+  Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
+  Stripe.urlScheme = 'flutterstripe';
+  await Stripe.instance.applySettings();
   await Firebase.initializeApp();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(

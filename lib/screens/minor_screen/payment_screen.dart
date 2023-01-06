@@ -1,12 +1,17 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:multi_store_app/providers/cart_provider.dart';
 import 'package:multi_store_app/screens/customer_home_screen.dart';
 import 'package:multi_store_app/widgets/appbar_widget.dart';
 import 'package:multi_store_app/widgets/blue_button.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:http/http.dart' as http;
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({
@@ -374,6 +379,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 //clear the cart product list
 
                               } else if (paymentMethod == PaymentMethods.visa) {
+                                int payment = totalPaid.round() * 100;
+                                makePayment(
+                                    customerData, payment.toString(), "USD");
                               } else if (paymentMethod ==
                                   PaymentMethods.paypal) {
                                 //   print("paypal");
@@ -394,6 +402,125 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
           );
         });
+  }
+
+  Map<String, dynamic>? paymentIntentData;
+  Future<void> makePayment(Map<String, dynamic> customerData, String totalPrice,
+      String currency) async {
+    try {
+      //STEP 1: Create Payment Intent
+      paymentIntentData = await createPaymentIntent(totalPrice, currency);
+      print("create");
+      //STEP 2: Initialize Payment Sheet
+      await Stripe.instance
+          .initPaymentSheet(
+              paymentSheetParameters: SetupPaymentSheetParameters(
+            paymentIntentClientSecret: paymentIntentData!["client_secret"],
+            style: ThemeMode.light,
+            applePay: const PaymentSheetApplePay(merchantCountryCode: "+92"),
+            googlePay: const PaymentSheetGooglePay(
+              merchantCountryCode: "US",
+              testEnv: true,
+            ),
+            merchantDisplayName: "anyName",
+          ))
+          .then((value) {});
+      //STEP 3: Display Payment sheet
+      await displayPaymentSheet(customerData);
+    } catch (error) {
+      throw Exception(error);
+    }
+  }
+
+  createPaymentIntent(String totalPrice, String currency) async {
+    try {
+      Map<String, dynamic> body = {
+        "amount": totalPrice, // = to 12$
+        "currency": currency,
+        "payment_method_types[]": "card"
+      };
+
+      var response = await http.post(
+        Uri.parse("https://api.stripe.com/v1/payment_intents"),
+        body: body,
+        headers: {
+          'Authorization': 'Bearer ${dotenv.env['stripeSecretKey']}',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+      );
+      return json.decode(response.body);
+    } catch (error) {
+      throw Exception(error.toString());
+    }
+  }
+
+  displayPaymentSheet(Map<String, dynamic> customerData) async {
+    try {
+      await Stripe.instance.presentPaymentSheet().then((value) async {
+        //Clear paymentIntent variable after successful payment
+        paymentIntentData = null;
+        //upload the orders to firebase
+
+        setState(() {
+          transactin = true;
+        });
+        for (var item in context.read<CartProvider>().productsList) {
+          CollectionReference orderRef =
+              FirebaseFirestore.instance.collection("orders");
+          orderId = const Uuid().v4();
+          await orderRef.doc(orderId).set({
+            //customer info
+            "customerId": customerData["customerId"],
+            "customerName": customerData["name"],
+            "customerEmail": customerData["email"],
+            "customerAddress": customerData["address"],
+            "customerPhone": customerData["phone"],
+            "customerProfileImage": customerData["profileImage"],
+            //supplier info
+            "supplierId": item.supplierId,
+            //produst info
+            "productName": item.name,
+            "productId": item.documentId,
+            "order": orderId,
+            "orderImage": item.imagesUrl.first,
+            "orderQuantity": item.quentity,
+            "orderPrice": item.quentity * item.price,
+
+            //delivery info
+            "deliveryStatus": "preparing",
+            "deliveryDate": "",
+            "orderDate": DateTime.now(),
+            "paymentStatus": "paid online",
+            "orderReview": false,
+          }).then((value) async {
+            await FirebaseFirestore.instance
+                .runTransaction((transaction) async {
+              DocumentReference documentReference = FirebaseFirestore.instance
+                  .collection("products")
+                  .doc(item.documentId);
+              DocumentSnapshot documentSnapshot =
+                  await transaction.get(documentReference);
+              transaction.update(documentReference,
+                  {"inStock": documentSnapshot["inStock"] - item.quentity});
+            });
+          });
+        }
+        setState(() {
+          transactin = false;
+        });
+        //clear the cart product list
+        Future.delayed(const Duration(microseconds: 10))
+            .whenComplete(() => context.read<CartProvider>().clearCart());
+        Future.delayed(const Duration(microseconds: 10)).whenComplete(
+            () => Navigator.pushNamed(context, CustomerHomeScreen.routeName));
+      }).onError((error, stackTrace) {
+        throw Exception(error);
+      });
+    } on StripeException catch (error) {
+      print('Error is:---> $error');
+    } catch (error) {
+      print('$error');
+    }
   }
 }
 
