@@ -84,6 +84,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - .env
     - assets/images/
     - assets/images/accessories/
     - assets/images/bags/
@@ -96,7 +97,6 @@ flutter:
     - assets/images/shoes/
     - assets/images/women/
     - assets/svgs/
-    - .env
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

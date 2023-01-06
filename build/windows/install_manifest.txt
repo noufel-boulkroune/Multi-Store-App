@@ -1,5 +1,6 @@
 D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/icudtl.dat
 D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/flutter_windows.dll
+D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/.env
 D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/AssetManifest.json
 D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/assets/fonts/Acme-Regular.ttf
 D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/assets/images/.DS_Store

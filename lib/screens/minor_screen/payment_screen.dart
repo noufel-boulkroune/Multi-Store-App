@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:multi_store_app/constante/stripe_keys.dart';
 import 'package:multi_store_app/providers/cart_provider.dart';
 import 'package:multi_store_app/screens/customer_home_screen.dart';
 import 'package:multi_store_app/widgets/appbar_widget.dart';
@@ -410,18 +411,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
     try {
       //STEP 1: Create Payment Intent
       paymentIntentData = await createPaymentIntent(totalPrice, currency);
-      print("create");
+
       //STEP 2: Initialize Payment Sheet
       await Stripe.instance
           .initPaymentSheet(
               paymentSheetParameters: SetupPaymentSheetParameters(
-            paymentIntentClientSecret: paymentIntentData!["client_secret"],
+            paymentIntentClientSecret: paymentIntentData!['client_secret'],
             style: ThemeMode.light,
-            applePay: const PaymentSheetApplePay(merchantCountryCode: "+92"),
+            applePay: const PaymentSheetApplePay(
+              merchantCountryCode: "+92",
+            ),
             googlePay: const PaymentSheetGooglePay(
               merchantCountryCode: "US",
               testEnv: true,
             ),
+            customerId: paymentIntentData!['customer'],
             merchantDisplayName: "anyName",
           ))
           .then((value) {});
@@ -440,11 +444,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
         "payment_method_types[]": "card"
       };
 
+      await dotenv.load(fileName: ".env");
       var response = await http.post(
         Uri.parse("https://api.stripe.com/v1/payment_intents"),
         body: body,
         headers: {
-          'Authorization': 'Bearer ${dotenv.env['stripeSecretKey']}',
+          //   'Authorization': 'Bearer ${dotenv.env['stripeSecretKey']}',
+          'Authorization': 'Bearer $stripeSecretKey',
           'Content-Type': 'application/x-www-form-urlencoded'
         },
       );
@@ -460,7 +466,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
         //Clear paymentIntent variable after successful payment
         paymentIntentData = null;
         //upload the orders to firebase
-
         setState(() {
           transactin = true;
         });
@@ -517,9 +522,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
         throw Exception(error);
       });
     } on StripeException catch (error) {
-      print('Error is:---> $error');
+      rethrow;
     } catch (error) {
-      print('$error');
+      rethrow;
     }
   }
 }
