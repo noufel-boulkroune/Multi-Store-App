@@ -16,7 +16,6 @@ import 'providers/wichlist_provider.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
 void main() async {
-  await dotenv.load();
   WidgetsFlutterBinding.ensureInitialized();
   Stripe.publishableKey = stripePublishableKey;
   Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
