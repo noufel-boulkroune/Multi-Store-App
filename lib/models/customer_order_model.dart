@@ -1,10 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:multi_store_app/widgets/blue_button.dart';
 
-class CustomerOrderModel extends StatelessWidget {
+class CustomerOrderModel extends StatefulWidget {
   final dynamic order;
   const CustomerOrderModel({super.key, required this.order});
 
+  @override
+  State<CustomerOrderModel> createState() => _CustomerOrderModelState();
+}
+
+class _CustomerOrderModelState extends State<CustomerOrderModel> {
+  late double rate;
+  late String comment;
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
@@ -15,7 +26,7 @@ class CustomerOrderModel extends StatelessWidget {
           children: [
             Container(
               constraints: const BoxConstraints(maxHeight: 80, maxWidth: 80),
-              child: Image.network(order["orderImage"]),
+              child: Image.network(widget.order["orderImage"]),
             ),
             Flexible(
                 child: Padding(
@@ -24,7 +35,7 @@ class CustomerOrderModel extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    order["productName"],
+                    widget.order["productName"],
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: TextStyle(
@@ -35,8 +46,9 @@ class CustomerOrderModel extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("\$ ${order["orderPrice"].toStringAsFixed(2)}"),
-                      Text("x ${order["orderQuantity"].toString()}")
+                      Text(
+                          "\$ ${widget.order["orderPrice"].toStringAsFixed(2)}"),
+                      Text("x ${widget.order["orderQuantity"].toString()}")
                     ],
                   )
                 ],
@@ -47,7 +59,10 @@ class CustomerOrderModel extends StatelessWidget {
       ),
       subtitle: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [const Text("See more .."), Text(order["deliveryStatus"])],
+        children: [
+          const Text("See more .."),
+          Text(widget.order["deliveryStatus"])
+        ],
       ),
       children: [
         Container(
@@ -55,7 +70,7 @@ class CustomerOrderModel extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
-              color: order["deliveryStatus"] == "delivered"
+              color: widget.order["deliveryStatus"] == "delivered"
                   ? Colors.amber.shade100
                   : Colors.white),
           child: Padding(
@@ -64,19 +79,19 @@ class CustomerOrderModel extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Name: ${order["customerName"]}",
+                  "Name: ${widget.order["customerName"]}",
                   style: const TextStyle(fontSize: 15),
                 ),
                 Text(
-                  "Phone: ${order["customerPhone"]}",
+                  "Phone: ${widget.order["customerPhone"]}",
                   style: const TextStyle(fontSize: 15),
                 ),
                 Text(
-                  "Email Address: ${order["customerEmail"]}",
+                  "Email Address: ${widget.order["customerEmail"]}",
                   style: const TextStyle(fontSize: 15),
                 ),
                 Text(
-                  "Address: ${order["customerAddress"]}",
+                  "Address: ${widget.order["customerAddress"]}",
                   style: const TextStyle(fontSize: 15),
                 ),
                 Row(
@@ -86,7 +101,7 @@ class CustomerOrderModel extends StatelessWidget {
                       style: TextStyle(fontSize: 15),
                     ),
                     Text(
-                      "${order["paymentStatus"]}",
+                      "${widget.order["paymentStatus"]}",
                       style:
                           const TextStyle(fontSize: 15, color: Colors.purple),
                     ),
@@ -99,24 +114,168 @@ class CustomerOrderModel extends StatelessWidget {
                       style: TextStyle(fontSize: 15),
                     ),
                     Text(
-                      "${order["deliveryStatus"]}",
+                      "${widget.order["deliveryStatus"]}",
                       style: const TextStyle(fontSize: 15, color: Colors.green),
                     ),
                   ],
                 ),
-                order["deliveryStatus"] == "shipping"
+                widget.order["deliveryStatus"] == "shipping"
                     ? Text(
-                        "Estimated Delivery Date: ${DateFormat("yyyy-MM-dd").format(order["deliveryDate"].toDate())}",
+                        "Estimated Delivery Date: ${DateFormat("yyyy-MM-dd").format(widget.order["deliveryDate"].toDate())}",
                         style: const TextStyle(fontSize: 15),
                       )
                     : const Text(""),
-                order["orderReview"] == false &&
-                        order["deliveryStatus"] == "delivered"
+                widget.order["orderReview"] == false &&
+                        widget.order["deliveryStatus"] == "delivered"
                     ? TextButton(
-                        onPressed: () {}, child: const Text("Write Review"))
+
+                        //Rating produacts
+
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return GestureDetector(
+                                onTap: () => FocusManager.instance.primaryFocus
+                                    ?.unfocus(),
+                                child: Material(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        RatingBar.builder(
+                                            initialRating: 1,
+                                            minRating: 1,
+                                            allowHalfRating: true,
+                                            itemBuilder: (context, index) {
+                                              return const Icon(
+                                                Icons.star,
+                                                color: Colors.amber,
+                                              );
+                                            },
+                                            onRatingUpdate: (value) {
+                                              rate = value;
+                                            }),
+                                        TextField(
+                                          maxLines: 3,
+                                          decoration: InputDecoration(
+                                            hintText: "Enter your review",
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15)),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                    color: Colors.grey,
+                                                    width: 1),
+                                                borderRadius:
+                                                    BorderRadius.circular(15)),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                    color: Colors.grey,
+                                                    width: 2),
+                                                borderRadius:
+                                                    BorderRadius.circular(15)),
+                                          ),
+                                          onChanged: (value) => comment = value,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            BlueButton(
+                                                lable: "cancel",
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                width: .4,
+                                                color: Colors.lightBlueAccent),
+                                            BlueButton(
+                                                lable: "Ok",
+                                                onPressed: () async {
+                                                  //Creat new collection called reviews in products collection
+
+                                                  CollectionReference
+                                                      productReviews =
+                                                      FirebaseFirestore.instance
+                                                          .collection(
+                                                              "products")
+                                                          .doc(widget.order[
+                                                              "productId"])
+                                                          .collection(
+                                                              "reviews");
+
+                                                  await productReviews
+                                                      .doc(FirebaseAuth.instance
+                                                          .currentUser!.uid)
+                                                      .set({
+                                                    "customerName": widget
+                                                        .order["customerName"],
+                                                    "customerEmail": widget
+                                                        .order["customerEmail"],
+                                                    "customerProfileImage": widget
+                                                            .order[
+                                                        "customerProfileImage"],
+                                                    "rate": rate,
+                                                    "comment": comment
+                                                  }).whenComplete(() async {
+                                                    // await FirebaseFirestore
+                                                    //     .instance
+                                                    //     .collection("orders")
+                                                    //     .doc(widget
+                                                    //         .order["order"])
+                                                    //     .update({
+                                                    //   "orderReview": true
+                                                    // });
+
+                                                    await FirebaseFirestore
+                                                        .instance
+                                                        .runTransaction(
+                                                            (transaction) async {
+                                                      DocumentReference
+                                                          documentReference =
+                                                          FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  "orders")
+                                                              .doc(widget.order[
+                                                                  "order"]);
+                                                      transaction.update(
+                                                          documentReference, {
+                                                        "orderReview": true
+                                                      });
+                                                    });
+                                                  });
+                                                  await Future.delayed(
+                                                          const Duration(
+                                                              microseconds: 10))
+                                                      .then((value) =>
+                                                          Navigator.pop(
+                                                              context));
+                                                },
+                                                width: .4,
+                                                color: Colors.lightBlueAccent),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        child: const Text("Write Review"))
                     : const Text(""),
-                order["orderReview"] == true &&
-                        order["deliveryStatus"] == "delivered"
+                widget.order["orderReview"] == true &&
+                        widget.order["deliveryStatus"] == "delivered"
                     ? Row(
                         children: const [
                           Icon(
