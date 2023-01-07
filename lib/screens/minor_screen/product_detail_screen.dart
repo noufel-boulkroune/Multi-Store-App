@@ -1,3 +1,4 @@
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_store_app/providers/cart_provider.dart';
 import 'package:multi_store_app/widgets/snackbar.dart';
@@ -36,6 +37,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final Stream<QuerySnapshot> productsStream = FirebaseFirestore.instance
         .collection('products')
         .where("mainCategory", isEqualTo: product["mainCategory"])
+        .snapshots();
+    final Stream<QuerySnapshot> reviewsStream = FirebaseFirestore.instance
+        .collection('products')
+        .doc(widget.product["productId"])
+        .collection("reviews")
         .snapshots();
     return SafeArea(
       child: ScaffoldMessenger(
@@ -249,8 +255,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+
+                    //Reviews
+                    Stack(
+                      children: [
+                        ExpandableTheme(
+                            data: const ExpandableThemeData(
+                                iconSize: 24,
+                                iconColor: Colors.lightBlueAccent),
+                            child: reviews(reviewsStream)),
+                        const Positioned(
+                            right: 20, top: 15, child: Text("rate%"))
+                      ],
+                    ),
+
                     const ProductDetailsHeader(
-                      lable: "  Recommended Items  ",
+                      lable: "   Similar Items   ",
                     ),
                     SizedBox(
                       child: StreamBuilder<QuerySnapshot>(
@@ -391,6 +411,91 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ),
     );
   }
+}
+
+Widget reviews(reviewsStream) {
+  return ExpandablePanel(
+      header: const Padding(
+        padding: EdgeInsets.all(10),
+        child: Text(
+          "reviews",
+          style: TextStyle(
+              fontSize: 24,
+              color: Colors.lightBlueAccent,
+              fontWeight: FontWeight.bold),
+        ),
+      ),
+      collapsed: SizedBox(height: 70, child: reviewExpanded(reviewsStream)),
+      expanded: SizedBox(height: 250, child: reviewExpanded(reviewsStream)));
+}
+
+Widget reviewExpanded(reviewsStream) {
+  return StreamBuilder<QuerySnapshot>(
+    stream: reviewsStream,
+    builder:
+        (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshotReview) {
+      if (snapshotReview.hasError) {
+        return const Text('Something went wrong');
+      }
+
+      if (snapshotReview.connectionState == ConnectionState.waiting) {
+        return const Material(
+          color: Colors.white,
+          child: Center(child: CircularProgressIndicator()),
+        );
+      }
+      final review = snapshotReview.data!.docs;
+      if (review.isEmpty) {
+        return const Text(
+          "This item has no reviwes yet !",
+          textAlign: TextAlign.start,
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.blueGrey,
+            fontWeight: FontWeight.bold,
+          ),
+        );
+      }
+
+      return ListView.builder(
+        itemCount: review.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: SizedBox(
+              height: 70,
+              width: 70,
+              child: CircleAvatar(
+                radius: 70,
+                backgroundImage: NetworkImage(
+                  review[index]["customerProfileImage"],
+                ),
+              ),
+            ),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(review[index]["customerName"]),
+                Row(
+                  children: [
+                    Text(review[index]["rate"].toString()),
+                    const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    )
+                  ],
+                )
+              ],
+            ),
+            subtitle: Text(
+              review[index]["comment"],
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          );
+        },
+      );
+    },
+  );
 }
 
 class ProductDetailsHeader extends StatelessWidget {
