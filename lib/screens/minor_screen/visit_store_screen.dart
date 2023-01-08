@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_store_app/screens/minor_screen/edit_store.dart';
 import 'package:multi_store_app/widgets/appbar_widget.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
@@ -105,7 +106,11 @@ class _VisitStoreScreenState extends State<VisitStoreScreen> {
                                     FirebaseAuth.instance.currentUser!.uid
                                 ? MaterialButton(
                                     onPressed: () {
-                                      setState(() {});
+                                      setState(() {
+                                        Navigator.pushNamed(
+                                            context, EditStore.routeName,
+                                            arguments: data);
+                                      });
                                     },
                                     child: Row(
                                       mainAxisAlignment:
