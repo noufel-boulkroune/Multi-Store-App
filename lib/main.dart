@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 //import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:multi_store_app/providers/cart_provider.dart';
+import 'package:multi_store_app/screens/minor_screen/edit_store.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         SupplierSignupScreen.routeName: (context) =>
             const SupplierSignupScreen(),
         SupplierLoginScreen.routeName: (context) => const SupplierLoginScreen(),
+        EditStore.routeName: (context) => const EditStore(),
       },
     );
   }

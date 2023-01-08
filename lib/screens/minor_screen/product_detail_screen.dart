@@ -265,7 +265,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 iconColor: Colors.lightBlueAccent),
                             child: reviews(reviewsStream)),
                         const Positioned(
-                            right: 20, top: 15, child: Text("rate%"))
+                            right: 35, top: 10, child: Text("rate%"))
                       ],
                     ),
 
