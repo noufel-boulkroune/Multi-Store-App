@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,6 +30,7 @@ class _EditStoreState extends State<EditStore> {
   late String phoneNumber;
   late String storeLogo;
   late String coverImage;
+  bool processing = false;
 
   pickStoreLogo() async {
     try {
@@ -106,13 +108,36 @@ class _EditStoreState extends State<EditStore> {
     }
   }
 
+  editStoreData() async {
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      DocumentReference documentReference = FirebaseFirestore.instance
+          .collection("suppliers")
+          .doc(FirebaseAuth.instance.currentUser!.uid);
+      transaction.update(documentReference, {
+        "storeName": storeName,
+        "storeLogo": storeLogo,
+        "phone": phoneNumber,
+        "coverImage": coverImage
+      });
+    }).whenComplete(() {
+      setState(() {
+        processing = false;
+      });
+      Navigator.pop(context);
+    });
+  }
+
   saveChanges(supplierData) async {
     if (formKey.currentState!.validate()) {
+      setState(() {
+        processing = true;
+      });
       // continue
       formKey.currentState!.save();
-      await uploadStoreLogo(supplierData).then((value) async =>
-          await uploadCoverImage(supplierData).then((value) =>
-              null /*RunTransaction to update the store name and phone number */));
+      await uploadStoreLogo(supplierData).then(
+          (value) async => await uploadCoverImage(supplierData).then((value) =>
+              /*RunTransaction to update the store name and phone number */
+              editStoreData()));
     } else {
       SnackBarHundler.showSnackBar(scafoldKey, "please fill all fields");
     }
@@ -130,7 +155,7 @@ class _EditStoreState extends State<EditStore> {
           title: const AppBarTitle(title: "Edit store"),
           leading: AppBarBackButton(color: Colors.black),
         ),
-        body: supplierData == null
+        body: supplierData == null || processing == true
             ? const Center(
                 child: CircularProgressIndicator(),
               )

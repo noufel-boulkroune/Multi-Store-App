@@ -150,10 +150,15 @@ class _VisitStoreScreenState extends State<VisitStoreScreen> {
                 ],
               ),
               toolbarHeight: 100,
-              flexibleSpace: Image.asset(
-                "assets/images/inapp/coverimage.jpg",
-                fit: BoxFit.cover,
-              ),
+              flexibleSpace: data["coverImage"] == ""
+                  ? Image.asset(
+                      "assets/images/inapp/coverimage.jpg",
+                      fit: BoxFit.cover,
+                    )
+                  : Image.network(
+                      data["coverImage"],
+                      fit: BoxFit.cover,
+                    ),
             ),
             body: StreamBuilder<QuerySnapshot>(
               stream: productsStream,
