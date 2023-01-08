@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/wichlist_provider.dart';
+import '../screens/minor_screen/edit_product.dart';
 import '../screens/minor_screen/product_detail_screen.dart';
 import 'package:collection/collection.dart';
 
@@ -106,7 +107,11 @@ class ProductDataModel extends StatelessWidget {
                       data["supplierId"] ==
                               FirebaseAuth.instance.currentUser!.uid
                           ? IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, EditProduct.routeName,
+                                    arguments: data);
+                              },
                               icon: const Icon(Icons.edit),
                               color: Colors.red,
                             )
