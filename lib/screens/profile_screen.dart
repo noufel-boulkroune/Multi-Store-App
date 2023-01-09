@@ -7,6 +7,7 @@ import 'package:multi_store_app/screens/customer_screens/wishlist_screen.dart';
 import 'package:multi_store_app/widgets/appbar_widget.dart';
 
 import '../widgets/alert_dialog.dart';
+import 'customer_screens/add_address.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String documentId;
@@ -252,9 +253,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 const BlueDivider(),
                                 RepeatedListTaile(
                                   title: "Address",
-                                  subTitle: data["address"] == ""
+                                  subTitle: userAddress(data),
+                                  onListTap: FirebaseAuth
+                                          .instance.currentUser!.isAnonymous
+                                      ? null
+                                      : () {
+                                          Navigator.pushNamed(
+                                              context, AddAddress.routeName);
+                                        },
+                                  /*data["address"] == ""
                                       ? "Example: 140 - st - New Gersy"
-                                      : data["address"],
+                                      : data["address"],*/
                                   icon: Icons.location_pin,
                                 ),
                               ]),
@@ -330,6 +339,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+
+  String userAddress(Map<String, dynamic> data) {
+    if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+      return "Example: New Jercey - USA";
+    } else if (FirebaseAuth.instance.currentUser!.isAnonymous == false &&
+        data["address"] == "") {
+      return "Set your Address";
+    }
+    return data["address"];
   }
 }
 

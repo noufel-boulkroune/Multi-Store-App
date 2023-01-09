@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 //import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:multi_store_app/providers/cart_provider.dart';
+import 'package:multi_store_app/screens/customer_screens/add_address.dart';
 import 'package:multi_store_app/screens/minor_screen/edit_product.dart';
 import 'package:multi_store_app/screens/minor_screen/edit_store.dart';
 import 'package:provider/provider.dart';
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
         SupplierLoginScreen.routeName: (context) => const SupplierLoginScreen(),
         EditStore.routeName: (context) => const EditStore(),
         EditProduct.routeName: (context) => const EditProduct(),
+        AddAddress.routeName: (context) => const AddAddress(),
       },
     );
   }
