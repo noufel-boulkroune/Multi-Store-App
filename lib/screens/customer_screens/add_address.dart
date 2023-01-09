@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:country_state_city_picker/country_state_city_picker.dart';
 import 'package:multi_store_app/widgets/snackbar.dart';
+import 'package:uuid/uuid.dart';
 
 import '/widgets/blue_button.dart';
 import '/widgets/appbar_widget.dart';
@@ -21,6 +24,7 @@ class _AddAddressState extends State<AddAddress> {
   String countryValue = "Choose Country";
   String stateValue = "Choose State";
   String cityValue = "Choose City";
+  bool prossecing = false;
   @override
   Widget build(BuildContext context) {
     return ScaffoldMessenger(
@@ -101,46 +105,75 @@ class _AddAddressState extends State<AddAddress> {
                         ],
                       ),
                     ),
-                    SelectState(
-                      onCountryChanged: (value) {
-                        setState(() {
-                          countryValue = value;
-                        });
-                      },
-                      onStateChanged: (value) {
-                        setState(() {
-                          stateValue = value;
-                        });
-                      },
-                      onCityChanged: (value) {
-                        setState(() {
-                          cityValue = value;
-                        });
-                      },
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: SelectState(
+                        onCountryChanged: (value) {
+                          setState(() {
+                            countryValue = value;
+                          });
+                        },
+                        onStateChanged: (value) {
+                          setState(() {
+                            stateValue = value;
+                          });
+                        },
+                        onCityChanged: (value) {
+                          setState(() {
+                            cityValue = value;
+                          });
+                        },
+                      ),
                     ),
                     const SizedBox(
                       height: 120,
                     ),
                     Center(
-                      child: BlueButton(
-                          lable: "Add New Address",
-                          onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                              if (countryValue != "Choose Country" &&
-                                  stateValue != "Choose State" &&
-                                  cityValue != "Choose City") {
-                                formKey.currentState!.save();
-                              } else {
-                                SnackBarHundler.showSnackBar(
-                                    scaffoldKey, "pleas set your locatuin");
-                              }
-                            } else {
-                              SnackBarHundler.showSnackBar(
-                                  scaffoldKey, "pleas fill all fields");
-                            }
-                          },
-                          width: .8,
-                          color: Colors.lightBlueAccent),
+                      child: prossecing == true
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : BlueButton(
+                              lable: "Add New Address",
+                              onPressed: () async {
+                                if (formKey.currentState!.validate()) {
+                                  if (countryValue != "Choose Country" &&
+                                      stateValue != "Choose State" &&
+                                      cityValue != "Choose City") {
+                                    prossecing = true;
+                                    formKey.currentState!.save();
+                                    CollectionReference customerReviews =
+                                        FirebaseFirestore.instance
+                                            .collection("customers")
+                                            .doc(FirebaseAuth
+                                                .instance.currentUser!.uid)
+                                            .collection("address");
+                                    var addressId = const Uuid().v4();
+                                    await customerReviews.doc(addressId).set({
+                                      "addressId": addressId,
+                                      "firstName": firstName,
+                                      "lastName": lastName,
+                                      "phoneNumber": phoneNumber,
+                                      "country": countryValue,
+                                      "state": stateValue,
+                                      "city": cityValue
+                                    }).whenComplete(() {
+                                      setState(() {
+                                        prossecing = false;
+                                        Navigator.pop(context);
+                                      });
+                                    });
+                                  } else {
+                                    SnackBarHundler.showSnackBar(
+                                        scaffoldKey, "pleas set your locatuin");
+                                  }
+                                } else {
+                                  SnackBarHundler.showSnackBar(
+                                      scaffoldKey, "pleas fill all fields");
+                                }
+                              },
+                              width: .8,
+                              color: Colors.lightBlueAccent),
                     ),
                   ],
                 ),
