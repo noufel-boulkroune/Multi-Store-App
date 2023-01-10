@@ -44,7 +44,6 @@ class _AddAddressState extends State<AddAddress> {
               child: Form(
                 key: formKey,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
@@ -126,7 +125,7 @@ class _AddAddressState extends State<AddAddress> {
                       ),
                     ),
                     const SizedBox(
-                      height: 120,
+                      height: 240,
                     ),
                     Center(
                       child: prossecing == true
@@ -156,7 +155,8 @@ class _AddAddressState extends State<AddAddress> {
                                       "phoneNumber": phoneNumber,
                                       "country": countryValue,
                                       "state": stateValue,
-                                      "city": cityValue
+                                      "city": cityValue,
+                                      "default": true
                                     }).whenComplete(() {
                                       setState(() {
                                         prossecing = false;
