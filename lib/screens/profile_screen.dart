@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_store_app/screens/cart_screen.dart';
+import 'package:multi_store_app/screens/customer_screens/address_list.dart';
 import 'package:multi_store_app/screens/customer_screens/customer_orders.dart';
 import 'package:multi_store_app/screens/customer_screens/wishlist_screen.dart';
 import 'package:multi_store_app/widgets/appbar_widget.dart';
@@ -259,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ? null
                                       : () {
                                           Navigator.pushNamed(
-                                              context, AddAddress.routeName);
+                                              context, AddressList.routeName);
                                         },
                                   /*data["address"] == ""
                                       ? "Example: 140 - st - New Gersy"
