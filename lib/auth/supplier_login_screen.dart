@@ -32,6 +32,8 @@ class _SupplierLoginScreenState extends State<SupplierLoginScreen> {
   }
 
   void login() async {
+    await FirebaseAuth.instance.currentUser!.reload();
+
     setState(() {
       processing = true;
     });
@@ -46,15 +48,51 @@ class _SupplierLoginScreenState extends State<SupplierLoginScreen> {
           email: email,
           password: password,
         )
-            .then((value) {
-          setState(() {
-            _formKey.currentState!.reset();
-            processing = false;
-          });
+            .then((value) async {
+          if (FirebaseAuth.instance.currentUser!.emailVerified == true) {
+            setState(() {
+              _formKey.currentState!.reset();
+              processing = false;
+            });
+            await Future.delayed(const Duration(microseconds: 10)).whenComplete(
+                () => Navigator.pushReplacementNamed(
+                    context, SupplierHomeScreen.routeName));
+          } else {
+            showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text("Email verification"),
+                content: const Text("Please verify your email before Login"),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        processing = false;
+                      });
+                      Navigator.of(ctx).pop();
+                    },
+                    child: const Text("Ok"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      try {
+                        FirebaseAuth.instance.currentUser!
+                            .sendEmailVerification();
+                      } catch (error) {
+                        print(error);
+                      }
+                      setState(() {
+                        processing = false;
+                      });
+                      Navigator.of(ctx).pop();
+                    },
+                    child: const Text("Resend"),
+                  ),
+                ],
+              ),
+            );
+          }
         });
-        await Future.delayed(const Duration(microseconds: 10)).whenComplete(
-            () => Navigator.pushReplacementNamed(
-                context, SupplierHomeScreen.routeName));
       } on FirebaseAuthException catch (error) {
         if (error.code == 'user-not-found') {
           SnackBarHundler.showSnackBar(
