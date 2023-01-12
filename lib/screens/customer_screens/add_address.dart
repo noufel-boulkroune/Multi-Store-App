@@ -141,14 +141,14 @@ class _AddAddressState extends State<AddAddress> {
                                       cityValue != "Choose City") {
                                     prossecing = true;
                                     formKey.currentState!.save();
-                                    CollectionReference customerReviews =
+                                    CollectionReference customerAddress =
                                         FirebaseFirestore.instance
                                             .collection("customers")
                                             .doc(FirebaseAuth
                                                 .instance.currentUser!.uid)
                                             .collection("address");
                                     var addressId = const Uuid().v4();
-                                    await customerReviews.doc(addressId).set({
+                                    await customerAddress.doc(addressId).set({
                                       "addressId": addressId,
                                       "firstName": firstName,
                                       "lastName": lastName,
@@ -157,7 +157,23 @@ class _AddAddressState extends State<AddAddress> {
                                       "state": stateValue,
                                       "city": cityValue,
                                       "default": true
-                                    }).whenComplete(() {
+                                    }).whenComplete(() async {
+                                      await FirebaseFirestore.instance
+                                          .runTransaction((transaction) async {
+                                        DocumentReference documentReference =
+                                            FirebaseFirestore.instance
+                                                .collection("customers")
+                                                .doc(FirebaseAuth
+                                                    .instance.currentUser!.uid);
+                                        DocumentSnapshot documentSnapshot =
+                                            await transaction
+                                                .get(documentReference);
+                                        transaction.update(documentReference, {
+                                          "phone": phoneNumber,
+                                          "address":
+                                              "$countryValue / $stateValue / $cityValue",
+                                        });
+                                      });
                                       setState(() {
                                         prossecing = false;
                                         Navigator.pop(context);

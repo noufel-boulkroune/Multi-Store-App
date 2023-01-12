@@ -58,6 +58,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             return Material(
               child: SafeArea(
                 child: Scaffold(
+                  backgroundColor: Colors.grey.shade200,
                   appBar: AppBar(
                     elevation: 0,
                     backgroundColor: Colors.grey.shade200,
