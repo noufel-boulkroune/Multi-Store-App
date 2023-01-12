@@ -93,41 +93,52 @@ class _SupplierSignupScreenState extends State<SupplierSignupScreen> {
           password = _passwordControler.text;
         });
         try {
-          await FirebaseAuth.instance
-              .createUserWithEmailAndPassword(
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: email,
             password: password,
-          )
-              .then((value) async {
-            //Store image in firebase
-            firebase_storege.Reference reference =
-                firebase_storege.FirebaseStorage.instance.ref(
-              "supplier-image/$email.jpg",
-            );
+          );
+          try {
+            await FirebaseAuth.instance.currentUser!
+                .sendEmailVerification()
+                .then((value) async {
+              //Store image in firebase
 
-            await reference.putFile(File(_imageFile!.path));
+              firebase_storege.Reference reference =
+                  firebase_storege.FirebaseStorage.instance.ref(
+                "supplier-image/$email.jpg",
+              );
 
-            storeLogo = await reference.getDownloadURL();
-            _supplierid = FirebaseAuth.instance.currentUser!.uid;
-            await suppliers.doc(_supplierid).set({
-              "storeName": storeName,
-              "email": email,
-              "storeLogo": storeLogo,
-              "phone": "",
-              "storeAddress": "",
-              "supplierId": _supplierid,
-              "coverImage": ""
-            }).then((value) {
-              setState(() {
-                _imageFile = null;
-                _formKey.currentState!.reset();
-                processing = false;
+              await reference.putFile(File(_imageFile!.path));
+
+              storeLogo = await reference.getDownloadURL();
+
+              await FirebaseAuth.instance.currentUser!
+                  .updateDisplayName(storeName);
+              await FirebaseAuth.instance.currentUser!
+                  .updatePhotoURL(storeName);
+              _supplierid = FirebaseAuth.instance.currentUser!.uid;
+              await suppliers.doc(_supplierid).set({
+                "storeName": storeName,
+                "email": email,
+                "storeLogo": storeLogo,
+                "phone": "",
+                "storeAddress": "",
+                "supplierId": _supplierid,
+                "coverImage": ""
+              }).then((value) {
+                setState(() {
+                  _imageFile = null;
+                  _formKey.currentState!.reset();
+                  processing = false;
+                });
               });
+              await Future.delayed(const Duration(microseconds: 10))
+                  .whenComplete(() => Navigator.pushNamed(
+                      context, SupplierLoginScreen.routeName));
             });
-            await Future.delayed(const Duration(microseconds: 10)).whenComplete(
-                () => Navigator.pushNamed(
-                    context, SupplierLoginScreen.routeName));
-          });
+          } catch (error) {
+            print(error);
+          }
         } on FirebaseAuthException catch (error) {
           if (error.code == 'weak-password') {
             SnackBarHundler.showSnackBar(
