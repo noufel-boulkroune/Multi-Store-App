@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_store_app/providers/cart_provider.dart';
+import 'package:multi_store_app/screens/customer_screens/add_address.dart';
 import 'package:multi_store_app/screens/minor_screen/payment_screen.dart';
 import 'package:multi_store_app/widgets/appbar_widget.dart';
 import 'package:multi_store_app/widgets/blue_button.dart';
@@ -46,6 +47,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
             return Material(
               child: SafeArea(
                 child: Scaffold(
+                  backgroundColor: Colors.grey.shade200,
                   appBar: AppBar(
                     elevation: 0,
                     backgroundColor: Colors.grey.shade200,
@@ -56,32 +58,58 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 60),
                     child: Column(
                       children: [
-                        Container(
-                          height: 90,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 6),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Text("Name: ${customerData["name"]}",
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis),
-                                  Text("Phone: ${customerData["phone"]}",
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis),
-                                  Text("Address: ${customerData["address"]}",
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis),
-                                ]),
-                          ),
-                        ),
+                        customerData["address"] == ""
+                            ? GestureDetector(
+                                onTap: () => Navigator.pushNamed(
+                                  context,
+                                  AddAddress.routeName,
+                                ),
+                                child: Container(
+                                  height: 90,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: const Center(
+                                      child: Text(
+                                    "Set Your Address",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 1.5,
+                                      color: Colors.blueGrey,
+                                    ),
+                                  )),
+                                ),
+                              )
+                            : Container(
+                                height: 90,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 6),
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text("Name: ${customerData["name"]}",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis),
+                                        Text("Phone: ${customerData["phone"]}",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis),
+                                        Text(
+                                            "Address: ${customerData["address"]}",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis),
+                                      ]),
+                                ),
+                              ),
                         const SizedBox(
                           height: 20,
                         ),
@@ -192,17 +220,27 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                   ),
                   bottomSheet: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: BlueButton(
-                        lable: "Confirm ${totalPrice.toStringAsFixed(2)} USD",
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const PaymentScreen(),
-                              ));
-                        },
-                        width: double.infinity,
-                        color: Colors.lightBlueAccent),
+                    child: customerData["address"] == ""
+                        ? BlueButton(
+                            lable: "Add New Address",
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, AddAddress.routeName);
+                            },
+                            width: double.infinity,
+                            color: Colors.lightBlueAccent)
+                        : BlueButton(
+                            lable:
+                                "Confirm ${totalPrice.toStringAsFixed(2)} USD",
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const PaymentScreen(),
+                                  ));
+                            },
+                            width: double.infinity,
+                            color: Colors.lightBlueAccent),
                   ),
                 ),
               ),

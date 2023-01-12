@@ -21,6 +21,7 @@ class _AddressListState extends State<AddressList> {
       .snapshots();
 
   bool processing = false;
+  bool defaultAddress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +33,12 @@ class _AddressListState extends State<AddressList> {
         title: const AppBarTitle(title: "Address List"),
       ),
       body: processing
-          ? const Center(
-              child: Image(
-                image: AssetImage("assets/svgs/loading-animation-blue.gif"),
+          ? const Material(
+              color: Colors.white,
+              child: Center(
+                child: Image(
+                  image: AssetImage("assets/svgs/loading-animation-blue.gif"),
+                ),
               ),
             )
           : SafeArea(
@@ -78,26 +82,43 @@ class _AddressListState extends State<AddressList> {
                     return ListView.builder(
                       itemCount: customerAddressData.length,
                       itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () async {
-                            setState(() {
-                              processing = true;
-                            });
+                        return Dismissible(
+                          key: UniqueKey(),
+                          onDismissed: (direction) async {
+                            customerAddressData[index]["default"] == true
+                                ? defaultAddress = true
+                                : defaultAddress = false;
+                            await FirebaseFirestore.instance
+                                .runTransaction((transaction) async {
+                              DocumentReference docReference = FirebaseFirestore
+                                  .instance
+                                  .collection("customers")
+                                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                                  .collection("address")
+                                  .doc(customerAddressData[index]["addressId"]);
+                              transaction.delete(docReference);
+                            }).then((value) async => defaultAddress == true
+                                    ? await FirebaseFirestore.instance
+                                        .runTransaction((transaction) async {
+                                        DocumentReference docReference =
+                                            FirebaseFirestore.instance
+                                                .collection("customers")
+                                                .doc(FirebaseAuth
+                                                    .instance.currentUser!.uid);
+                                        transaction.update(docReference, {
+                                          "phone": "",
+                                          "address": "",
+                                        });
+                                      })
+                                    : null);
+                          },
+                          child: GestureDetector(
+                            onTap: () async {
+                              setState(() {
+                                processing = true;
+                              });
 
-                            for (var item in customerAddressData) {
-                              await FirebaseFirestore.instance
-                                  .runTransaction((transaction) async {
-                                DocumentReference documentReference =
-                                    FirebaseFirestore.instance
-                                        .collection("customers")
-                                        .doc(FirebaseAuth
-                                            .instance.currentUser!.uid)
-                                        .collection("address")
-                                        .doc(item.id);
-                                transaction.update(documentReference, {
-                                  "default": false,
-                                });
-                              }).then((value) async {
+                              for (var item in customerAddressData) {
                                 await FirebaseFirestore.instance
                                     .runTransaction((transaction) async {
                                   DocumentReference documentReference =
@@ -106,59 +127,97 @@ class _AddressListState extends State<AddressList> {
                                           .doc(FirebaseAuth
                                               .instance.currentUser!.uid)
                                           .collection("address")
-                                          .doc(customerAddressData[index]
-                                              ["addressId"]);
+                                          .doc(item.id);
                                   transaction.update(documentReference, {
-                                    "default": true,
+                                    "default": false,
+                                  });
+                                }).then((value) async {
+                                  await FirebaseFirestore.instance
+                                      .runTransaction((transaction) async {
+                                    DocumentReference documentReference =
+                                        FirebaseFirestore.instance
+                                            .collection("customers")
+                                            .doc(FirebaseAuth
+                                                .instance.currentUser!.uid)
+                                            .collection("address")
+                                            .doc(customerAddressData[index]
+                                                ["addressId"]);
+                                    transaction.update(documentReference, {
+                                      "default": true,
+                                    });
+                                  });
+                                }).then((value) async {
+                                  await FirebaseFirestore.instance
+                                      .runTransaction((transaction) async {
+                                    DocumentReference documentReference =
+                                        FirebaseFirestore.instance
+                                            .collection("customers")
+                                            .doc(FirebaseAuth
+                                                .instance.currentUser!.uid);
+                                    DocumentSnapshot documentSnapshot =
+                                        await transaction
+                                            .get(documentReference);
+                                    transaction.update(documentReference, {
+                                      "phone": customerAddressData[index]
+                                          ["phoneNumber"],
+                                      "address":
+                                          "${customerAddressData[index]["country"]} / ${customerAddressData[index]["state"]} / ${customerAddressData[index]["city"]}",
+                                    });
+                                  });
+                                  setState(() {
+                                    processing = false;
                                   });
                                 });
-                              }).then((value) {
-                                setState(() {
-                                  processing = false;
-                                });
-                              });
-                            }
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Card(
-                              child: ListTile(
-                                trailing: customerAddressData[index]
-                                            ["default"] ==
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Card(
+                                color: customerAddressData[index]["default"] ==
                                         true
-                                    ? const Icon(Icons.home)
-                                    : const SizedBox(),
-                                title: Container(
-                                  margin: const EdgeInsets.only(top: 10),
-                                  height: 45,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                          "${customerAddressData[index]["firstName"]} - ${customerAddressData[index]["lastName"]}"),
-                                      Text(
-                                          "${customerAddressData[index]["phoneNumber"]}"),
-                                    ],
+                                    ? Colors.lightBlueAccent.withOpacity(.5)
+                                    : Colors.white,
+                                child: ListTile(
+                                  trailing: customerAddressData[index]
+                                              ["default"] ==
+                                          true
+                                      ? const Icon(
+                                          Icons.home,
+                                          color: Colors.white,
+                                        )
+                                      : const SizedBox(),
+                                  title: Container(
+                                    margin: const EdgeInsets.only(top: 10),
+                                    height: 55,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            "${customerAddressData[index]["firstName"]} - ${customerAddressData[index]["lastName"]}"),
+                                        Text(
+                                            "${customerAddressData[index]["phoneNumber"]}"),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                subtitle: Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 10),
-                                  height: 40,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          "City/State: ${customerAddressData[index]["city"]} / ${customerAddressData[index]["state"]}"),
-                                      Text(
-                                          " Country: ${customerAddressData[index]["country"]}"),
-                                    ],
+                                  subtitle: Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    height: 55,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            "City/State: ${customerAddressData[index]["city"]} / ${customerAddressData[index]["state"]}"),
+                                        Text(
+                                            " Country: ${customerAddressData[index]["country"]}"),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
