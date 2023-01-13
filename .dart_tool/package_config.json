@@ -230,6 +230,36 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "google_sign_in",
+      "rootUri": "file:///C:/Development/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in-5.4.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "google_sign_in_android",
+      "rootUri": "file:///C:/Development/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_android-6.1.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "google_sign_in_ios",
+      "rootUri": "file:///C:/Development/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_ios-5.5.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "google_sign_in_platform_interface",
+      "rootUri": "file:///C:/Development/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_platform_interface-2.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "google_sign_in_web",
+      "rootUri": "file:///C:/Development/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_web-0.10.2+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "http",
       "rootUri": "file:///C:/Development/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/http-0.13.5",
       "packageUri": "lib/",
@@ -338,6 +368,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "quiver",
+      "rootUri": "file:///C:/Development/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/quiver-3.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///C:/Development/flutter/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -428,7 +464,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2023-01-13T10:39:59.309862Z",
+  "generated": "2023-01-13T17:07:44.432679Z",
   "generator": "pub",
   "generatorVersion": "2.18.6"
 }

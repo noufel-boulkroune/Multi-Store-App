@@ -227,7 +227,7 @@ class _SupplierLoginScreenState extends State<SupplierLoginScreen> {
                         processing
                             ? const Center(child: CircularProgressIndicator())
                             : AuthMainButton(
-                                mainButtonLable: "Sign In",
+                                mainButtonLable: "Log In",
                                 onPressed: () {
                                   login();
                                 },
