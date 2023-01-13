@@ -7,6 +7,7 @@ import 'package:multi_store_app/auth/customer_signup_screen.dart';
 import '../screens/customer_home_screen.dart';
 import '../widgets/auth_widgets.dart';
 import '../widgets/snackbar.dart';
+import 'forgot_password.dart';
 
 class CustomerLoginScreen extends StatefulWidget {
   static const routeName = "customer_login";
@@ -34,7 +35,15 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
     super.dispose();
   }
 
+  @override
+  void initState() {
+    _emailControler;
+    _passwordControler;
+    super.initState();
+  }
+
   void login() async {
+    await FirebaseAuth.instance.currentUser!.reload();
     setState(() {
       processing = true;
     });
@@ -49,15 +58,51 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
           email: email,
           password: password,
         )
-            .then((value) {
-          setState(() {
-            _formKey.currentState!.reset();
-            processing = false;
-          });
+            .then((value) async {
+          if (FirebaseAuth.instance.currentUser!.emailVerified == true) {
+            setState(() {
+              _formKey.currentState!.reset();
+              processing = false;
+            });
+            await Future.delayed(const Duration(microseconds: 10)).whenComplete(
+                () => Navigator.pushReplacementNamed(
+                    context, CustomerHomeScreen.routeName));
+          } else {
+            showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text("Email verification"),
+                content: const Text("Please verify your email before Login"),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        processing = false;
+                      });
+                      Navigator.of(ctx).pop();
+                    },
+                    child: const Text("Ok"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      try {
+                        FirebaseAuth.instance.currentUser!
+                            .sendEmailVerification();
+                      } catch (error) {
+                        print(error);
+                      }
+                      setState(() {
+                        processing = false;
+                      });
+                      Navigator.of(ctx).pop();
+                    },
+                    child: const Text("Resend"),
+                  ),
+                ],
+              ),
+            );
+          }
         });
-        await Future.delayed(const Duration(microseconds: 10)).whenComplete(
-            () => Navigator.pushReplacementNamed(
-                context, CustomerHomeScreen.routeName));
       } on FirebaseAuthException catch (error) {
         if (error.code == 'user-not-found') {
           SnackBarHundler.showSnackBar(
@@ -161,7 +206,12 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                                             color: Colors.lightBlueAccent,
                                           )))),
                         TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                ForgotPassword.routeName,
+                              );
+                            },
                             child: const Text(
                               "Forget Password?",
                               style: TextStyle(

@@ -101,6 +101,7 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
           )
               .then((value) async {
             //Store image in firebase
+            await FirebaseAuth.instance.currentUser!.sendEmailVerification();
             firebase_storege.Reference reference =
                 firebase_storege.FirebaseStorage.instance.ref(
               "customer-image/$email.jpg",
