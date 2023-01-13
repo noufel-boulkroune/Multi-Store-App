@@ -32,11 +32,10 @@ class _SupplierLoginScreenState extends State<SupplierLoginScreen> {
   }
 
   void login() async {
-    await FirebaseAuth.instance.currentUser!.reload();
-
     setState(() {
       processing = true;
     });
+
     if (_formKey.currentState!.validate()) {
       setState(() {
         email = _emailControler.text;
@@ -49,6 +48,11 @@ class _SupplierLoginScreenState extends State<SupplierLoginScreen> {
           password: password,
         )
             .then((value) async {
+          setState(() {
+            processing = false;
+          });
+          await FirebaseAuth.instance.currentUser!.reload();
+
           if (FirebaseAuth.instance.currentUser!.emailVerified == true) {
             setState(() {
               _formKey.currentState!.reset();
@@ -223,7 +227,7 @@ class _SupplierLoginScreenState extends State<SupplierLoginScreen> {
                         processing
                             ? const Center(child: CircularProgressIndicator())
                             : AuthMainButton(
-                                mainButtonLable: "Sign Up",
+                                mainButtonLable: "Sign In",
                                 onPressed: () {
                                   login();
                                 },

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_store_app/auth/update_password.dart';
 import 'package:multi_store_app/screens/cart_screen.dart';
 import 'package:multi_store_app/screens/customer_screens/address_list.dart';
 import 'package:multi_store_app/screens/customer_screens/customer_orders.dart';
@@ -290,7 +291,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 RepeatedListTaile(
                                   title: 'Change Password',
                                   icon: Icons.lock,
-                                  onListTap: () {},
+                                  onListTap: () {
+                                    Navigator.pushNamed(
+                                        context, UpdatePassword.routeName);
+                                  },
                                 ),
                                 const BlueDivider(),
                                 RepeatedListTaile(
