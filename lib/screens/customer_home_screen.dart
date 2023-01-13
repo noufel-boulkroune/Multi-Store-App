@@ -25,9 +25,9 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
     const CategoryScreen(),
     StoresScreen(),
     const CartScreen(),
-    ProfileScreen(
-      documentId: FirebaseAuth.instance.currentUser!.uid,
-    ),
+    const ProfileScreen(
+        // documentId: FirebaseAuth.instance.currentUser!.uid,
+        ),
     // ProfileScreen(documentId: "v1Wb04NL2mSXqwt2Xi6WOdNgyBi2")
   ];
   @override

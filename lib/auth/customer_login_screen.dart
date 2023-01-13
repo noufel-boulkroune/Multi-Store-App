@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:multi_store_app/auth/customer_signup_screen.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../screens/customer_home_screen.dart';
 import '../widgets/auth_widgets.dart';
@@ -20,14 +22,70 @@ class CustomerLoginScreen extends StatefulWidget {
 final TextEditingController _emailControler = TextEditingController();
 final TextEditingController _passwordControler = TextEditingController();
 
+CollectionReference customers =
+    FirebaseFirestore.instance.collection("customers");
+
 class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
   late String email, password, profileImage;
   bool processing = false;
-
+  bool docExists = false;
   bool passwordVisibility = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldMessengerState> _scafoldKey =
       GlobalKey<ScaffoldMessengerState>();
+
+  Future<bool> checkIfDocExists(docId) async {
+    try {
+      var doc = await customers.doc(docId).get();
+      return doc.exists;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    // setState(() {
+    //   processing = true;
+    // });
+
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    return await FirebaseAuth.instance
+        .signInWithCredential(credential)
+        .whenComplete(() async {
+      User user = FirebaseAuth.instance.currentUser!;
+      docExists = await checkIfDocExists(user.uid);
+      docExists == false
+          ? await customers.doc(user.uid).set({
+              "name": user.displayName,
+              "email": user.email,
+              "profileImage": user.photoURL,
+              "phone": "",
+              "address": "",
+              "customerId": user.uid
+            }).whenComplete(() {
+              setState(() {
+                processing = false;
+              });
+              Navigator.pushNamed(context, CustomerHomeScreen.routeName);
+            })
+          : () {
+              setState(() {
+                processing = false;
+              });
+              Navigator.pushNamed(context, CustomerHomeScreen.routeName);
+            };
+    });
+  }
+
   @override
   void dispose() {
     _emailControler.dispose();
@@ -153,7 +211,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     const SizedBox(
-                      height: 50,
+                      height: 30,
                     ),
                     const AuthHeaderLable(
                       headerLable: 'Log In',
@@ -182,7 +240,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                                 labelText: "Email Adress",
                                 hintText: "Enter your email")),
                         const SizedBox(
-                          height: 50,
+                          height: 30,
                         ),
                         TextFormField(
                             controller: _passwordControler,
@@ -242,11 +300,81 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                         processing
                             ? const Center(child: CircularProgressIndicator())
                             : AuthMainButton(
-                                mainButtonLable: "Sign In",
+                                mainButtonLable: "Log In",
                                 onPressed: () {
                                   login();
                                 },
                               ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            SizedBox(
+                              height: 2,
+                              width: 100,
+                              child: Divider(
+                                thickness: 1,
+                                color: Colors.lightBlueAccent,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: Text(
+                                "OR",
+                                style: TextStyle(
+                                  color: Colors.lightBlueAccent,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 2,
+                              width: 100,
+                              child: Divider(
+                                thickness: 1,
+                                color: Colors.lightBlueAccent,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        processing == true
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : Material(
+                                elevation: 3,
+                                color: Colors.lightBlueAccent,
+                                borderRadius: BorderRadius.circular(15),
+                                child: MaterialButton(
+                                  onPressed: () {
+                                    signInWithGoogle();
+                                  },
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: const [
+                                        Icon(
+                                          Icons.g_mobiledata,
+                                          color: Colors.white,
+                                          size: 50,
+                                        ),
+                                        Text(
+                                          "Sign In With Google",
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      ]),
+                                ),
+                              )
                       ],
                     ),
                     const SizedBox(

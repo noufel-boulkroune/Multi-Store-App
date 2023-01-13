@@ -9,28 +9,40 @@ import 'package:multi_store_app/screens/customer_screens/wishlist_screen.dart';
 import 'package:multi_store_app/widgets/appbar_widget.dart';
 
 import '../widgets/alert_dialog.dart';
-import 'customer_screens/add_address.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final String documentId;
-  const ProfileScreen({super.key, required this.documentId});
+//  final String documentId;
+  const ProfileScreen({super.key /*, required this.documentId*/});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late String documentId;
   CollectionReference customers =
       FirebaseFirestore.instance.collection('customers');
   CollectionReference anonymous =
       FirebaseFirestore.instance.collection('anonymous');
 
   @override
+  void initState() {
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user != null) {
+        setState(() {
+          documentId = user.uid;
+        });
+      }
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
       future: FirebaseAuth.instance.currentUser!.isAnonymous
-          ? anonymous.doc(widget.documentId).get()
-          : customers.doc(widget.documentId).get(),
+          ? anonymous.doc(documentId).get()
+          : customers.doc(documentId).get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
