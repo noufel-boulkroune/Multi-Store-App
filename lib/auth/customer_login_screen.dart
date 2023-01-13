@@ -43,10 +43,10 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
   }
 
   void login() async {
-    await FirebaseAuth.instance.currentUser!.reload();
     setState(() {
       processing = true;
     });
+    //
     if (_formKey.currentState!.validate()) {
       setState(() {
         email = _emailControler.text;
@@ -59,6 +59,11 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
           password: password,
         )
             .then((value) async {
+          setState(() {
+            processing = false;
+          });
+          await FirebaseAuth.instance.currentUser!.reload();
+
           if (FirebaseAuth.instance.currentUser!.emailVerified == true) {
             setState(() {
               _formKey.currentState!.reset();
@@ -137,7 +142,6 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
       child: Scaffold(
         body: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          reverse: true,
           child: SafeArea(
             child: Container(
               height: MediaQuery.of(context).size.height * .94,
@@ -238,7 +242,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                         processing
                             ? const Center(child: CircularProgressIndicator())
                             : AuthMainButton(
-                                mainButtonLable: "Sign Up",
+                                mainButtonLable: "Sign In",
                                 onPressed: () {
                                   login();
                                 },

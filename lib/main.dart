@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multi_store_app/auth/forgot_password.dart';
+import 'package:multi_store_app/auth/update_password.dart';
 //import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:multi_store_app/providers/cart_provider.dart';
 import 'package:multi_store_app/screens/customer_screens/add_address.dart';
@@ -64,6 +65,7 @@ class MyApp extends StatelessWidget {
         AddAddress.routeName: (context) => const AddAddress(),
         AddressList.routeName: (context) => const AddressList(),
         ForgotPassword.routeName: (context) => const ForgotPassword(),
+        UpdatePassword.routeName: (context) => const UpdatePassword(),
       },
     );
   }

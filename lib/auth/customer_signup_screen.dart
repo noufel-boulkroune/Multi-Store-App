@@ -110,6 +110,9 @@ class _CustomerSignupScreenState extends State<CustomerSignupScreen> {
             await reference.putFile(File(_imageFile!.path));
 
             profileImage = await reference.getDownloadURL();
+            await FirebaseAuth.instance.currentUser!
+                .updateDisplayName(profileImage);
+            await FirebaseAuth.instance.currentUser!.updatePhotoURL(name);
             _userid = FirebaseAuth.instance.currentUser!.uid;
             await customers.doc(_userid).set({
               "name": name,
