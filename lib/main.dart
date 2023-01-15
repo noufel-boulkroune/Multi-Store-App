@@ -7,6 +7,7 @@ import 'package:multi_store_app/screens/customer_screens/add_address.dart';
 import 'package:multi_store_app/screens/customer_screens/address_list.dart';
 import 'package:multi_store_app/screens/minor_screen/edit_product.dart';
 import 'package:multi_store_app/screens/minor_screen/edit_store.dart';
+import 'package:multi_store_app/screens/onboarding_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -49,7 +50,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: "/",
+      // initialRoute: OnboardingScreen.routeName,
+      initialRoute: OnboardingScreen.routeName,
       routes: {
         "/": (context) => const WelcomeScreen(),
         CustomerHomeScreen.routeName: (context) => const CustomerHomeScreen(),
@@ -66,6 +68,7 @@ class MyApp extends StatelessWidget {
         AddressList.routeName: (context) => const AddressList(),
         ForgotPassword.routeName: (context) => const ForgotPassword(),
         UpdatePassword.routeName: (context) => const UpdatePassword(),
+        OnboardingScreen.routeName: (context) => const OnboardingScreen(),
       },
     );
   }

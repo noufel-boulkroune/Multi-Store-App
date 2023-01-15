@@ -81,6 +81,9 @@ D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runn
 D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/assets/images/men/men6.jpg
 D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/assets/images/men/men7.jpg
 D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/assets/images/men/men8.jpg
+D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/assets/images/onboard/sale.png
+D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/assets/images/onboard/shoes.png
+D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/assets/images/onboard/watches.png
 D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/assets/images/shoes/shoes0.jpg
 D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/assets/images/shoes/shoes1.jpg
 D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/assets/images/shoes/shoes10.jpg
@@ -110,5 +113,6 @@ D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runn
 D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/fonts/MaterialIcons-Regular.otf
 D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/kernel_blob.bin
 D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/NOTICES.Z
+D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/packages/country_state_city_picker/lib/assets/country.json
 D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf
 D:/all-projects/flutter_projects/Udemy_Course/multi_store_app/build/windows/runner/Debug/data/flutter_assets/shaders/ink_sparkle.frag

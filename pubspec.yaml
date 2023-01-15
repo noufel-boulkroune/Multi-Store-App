@@ -101,6 +101,7 @@ flutter:
     - assets/images/men/
     - assets/images/shoes/
     - assets/images/women/
+    - assets/images/onboard/
     - assets/svgs/
   #   - images/a_dot_ham.jpeg
 
