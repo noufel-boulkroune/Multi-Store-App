@@ -143,9 +143,13 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
                 navigateToOffer();
               },
-              child: Image.asset(
-                "assets/images/onboard/$assetName.jpg",
-                fit: BoxFit.cover,
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Image.asset(
+                  "assets/images/onboard/$assetName.jpg",
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Positioned(
