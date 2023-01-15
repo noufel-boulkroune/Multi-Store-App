@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_store_app/screens/customer_home_screen.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
@@ -9,10 +10,12 @@ import '../../widgets/appbar_widget.dart';
 class SubCategoryProducts extends StatelessWidget {
   final String subCategoryName;
   final String mainCategoryName;
+  final bool fromOnboardingScreen;
   const SubCategoryProducts(
       {super.key,
       required this.subCategoryName,
-      required this.mainCategoryName});
+      required this.mainCategoryName,
+      this.fromOnboardingScreen = false});
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +29,20 @@ class SubCategoryProducts extends StatelessWidget {
         appBar: AppBar(
             elevation: 0,
             backgroundColor: Colors.white,
-            leading: AppBarBackButton(
-              color: Colors.black,
-            ),
+            leading: fromOnboardingScreen == false
+                ? AppBarBackButton(
+                    color: Colors.black,
+                  )
+                : IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(
+                          context, CustomerHomeScreen.routeName);
+                    },
+                  ),
             title: AppBarTitle(title: subCategoryName)),
         body: StreamBuilder<QuerySnapshot>(
           stream: productsStream,
